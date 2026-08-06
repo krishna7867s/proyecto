@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Productos - Dali Medica</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;color:#333;background:#f5f7fb}
+    header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:#fff;border-bottom:1px solid #e3e6ea;position:sticky;top:0;z-index:10}
+    .logo{font-weight:700;font-size:18px;color:#1a73e8}
+    nav a{margin-left:16px;text-decoration:none;color:#333}
+    .container{padding:24px;max-width:1180px;margin:0 auto}
+    .intro{margin-bottom:20px}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:24px}
+    .list{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+    .item{background:#fff;border:1px solid #e6e6e6;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+    .item.locked{border-color:#f4b6b6;background:#fff6f6}
+    .item h3{margin:0;font-size:18px}
+    .item p{margin:0;color:#555}
+    .item button{align-self:flex-start;padding:10px 14px;border:none;border-radius:6px;background:#1a73e8;color:#fff;cursor:pointer}
+    .item button.secondary{background:#5f6368}
+    .cart-box{background:#fff;border:1px solid #e6e6e6;border-radius:10px;padding:18px}
+    .cart-box h2{margin-top:0}
+    .cart-list{list-style:none;margin:0;padding:0}
+    .cart-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
+    .cart-row:last-child{border-bottom:none}
+    .total{font-weight:700;margin-top:16px;font-size:18px}
+    .payment{margin-top:18px}
+    .payment label{display:block;margin-bottom:10px}
+    .payment input{margin-right:8px}
+    .checkout{width:100%;padding:12px 14px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:16px;cursor:pointer;margin-top:10px}
+    .upload-area{background:#fff;border:1px solid #e6e6e6;border-radius:10px;padding:18px;margin-top:24px}
+    .upload-area h2{margin-top:0}
+    .upload-area input{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px}
+    .message{margin-top:12px;font-weight:700}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">dali medica</div>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="productos.html">Productos</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contactos.html">Contactos</a>
+      <a href="crear_usuario.html">Iniciar sesión</a>
+    </nav>
+  </header>
+  <main class="container">
+    <section class="intro">
+      <h1>Catálogo de productos médicos</h1>
+      <p>Desde prótesis hasta productos simples y medicinas. Algunos productos requieren receta médica y se validan con un documento.</p>
+    </section>
+
+    <div class="grid">
+      <section class="list">
+        <article class="item" data-id="protesis" data-name="Prótesis de rodilla" data-price="1200000" data-locked="true">
+          <h3>Prótesis de rodilla</h3>
+          <p>Precio: ₡1.200.000</p>
+          <p>Requiere receta médica para aprobación.</p>
+          <button onclick="selectRecipe(this)" class="secondary">Subir receta</button>
+        </article>
+        <article class="item" data-id="silla" data-name="Silla de ruedas" data-price="72000" data-locked="false">
+          <h3>Silla de ruedas</h3>
+          <p>Precio: ₡72.000</p>
+          <p>Producto disponible para entrega inmediata.</p>
+          <button onclick="addToCart(this)">Agregar al carrito</button>
+        </article>
+        <article class="item" data-id="andador" data-name="Andador plegable" data-price="54000" data-locked="false">
+          <h3>Andador plegable</h3>
+          <p>Precio: ₡54.000</p>
+          <p>Fácil de usar en espacios reducidos.</p>
+          <button onclick="addToCart(this)">Agregar al carrito</button>
+        </article>
+        <article class="item locked" data-id="medX" data-name="Medicamento X" data-price="18000" data-locked="true">
+          <h3>Medicamento X</h3>
+          <p>Precio: ₡18.000</p>
+          <p>Necesita receta médica.</p>
+          <button onclick="selectRecipe(this)">Subir receta</button>
+        </article>
+        <article class="item locked" data-id="medY" data-name="Medicamento Y" data-price="27000" data-locked="true">
+          <h3>Medicamento Y</h3>
+          <p>Precio: ₡27.000</p>
+          <p>Necesita receta médica.</p>
+          <button onclick="selectRecipe(this)">Subir receta</button>
+        </article>
+        <article class="item" data-id="guantes" data-name="Guantes descartables" data-price="9000" data-locked="false">
+          <h3>Guantes descartables</h3>
+          <p>Precio: ₡9.000 (caja x100)</p>
+          <p>Producto disponible sin receta.</p>
+          <button onclick="addToCart(this)">Agregar al carrito</button>
+        </article>
+        <article class="item" data-id="mascarillas" data-name="Mascarillas quirúrgicas" data-price="12000" data-locked="false">
+          <h3>Mascarillas quirúrgicas</h3>
+          <p>Precio: ₡12.000 (caja x50)</p>
+          <p>Producto disponible sin receta.</p>
+          <button onclick="addToCart(this)">Agregar al carrito</button>
+        </article>
+      </section>
+
+      <aside class="cart-box">
+        <h2>Carrito de compras</h2>
+        <ul id="cartItems" class="cart-list"></ul>
+        <p class="total" id="cartTotal">Total: ₡0</p>
+        <div class="payment">
+          <h3>Métodos de pago</h3>
+          <label><input type="radio" name="payment" value="Tarjeta de débito"> Tarjeta de débito</label>
+          <label><input type="radio" name="payment" value="Tarjeta de crédito"> Tarjeta de crédito</label>
+          <label><input type="radio" name="payment" value="Transferencia bancaria"> Transferencia bancaria</label>
+        </div>
+        <button class="checkout" onclick="checkout()">Pagar ahora</button>
+        <p id="cartMessage" class="message"></p>
+        <div class="upload-area" id="uploadArea" style="display:none;">
+          <h2 id="uploadTitle">Subir receta</h2>
+          <p>Selecciona un archivo PDF o toma una foto desde la cámara.</p>
+          <input id="recipeFile" type="file" accept="image/*,.pdf" capture="environment">
+          <button style="margin-top:12px;" onclick="validateRecipe()">Validar receta y agregar al carrito</button>
+          <button style="margin-top:12px;background:#5f6368;" onclick="cancelRecipe()">Cancelar</button>
+          <p id="uploadMessage" class="message"></p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem('dali_cart') || '[]');
+    let currentRecipeProduct = null;
+
+    function saveCart(){
+      localStorage.setItem('dali_cart', JSON.stringify(cart));
+    }
+
+    function formatPrice(value){
+      return '₡' + value.toLocaleString('es-ES');
+    }
+
+    function renderCart(){
+      const cartItems = document.getElementById('cartItems');
+      const totalElement = document.getElementById('cartTotal');
+      const cartMessage = document.getElementById('cartMessage');
+      cartMessage.textContent = '';
+      cartItems.innerHTML = '';
+      let total = 0;
+      if(cart.length === 0){
+        cartItems.innerHTML = '<li>No hay productos en el carrito.</li>';
+      } else {
+        cart.forEach((item,index)=>{
+          total += item.price;
+          const li = document.createElement('li');
+          li.className = 'cart-row';
+          li.innerHTML = `<span>${item.name}</span><span>${formatPrice(item.price)} <button onclick="removeFromCart(${index})" style="border:none;background:transparent;color:#d93025;cursor:pointer">Eliminar</button></span>`;
+          cartItems.appendChild(li);
+        });
+      }
+      totalElement.textContent = 'Total: ' + formatPrice(total);
+    }
+
+    function addToCart(button){
+      const card = button.closest('.item');
+      const item = {
+        id: card.dataset.id,
+        name: card.dataset.name,
+        price: Number(card.dataset.price),
+        locked: card.dataset.locked === 'true'
+      };
+      if(item.locked){
+        selectRecipe(button);
+        return;
+      }
+      cart.push(item);
+      saveCart();
+      renderCart();
+    }
+
+    function removeFromCart(index){
+      cart.splice(index,1);
+      saveCart();
+      renderCart();
+    }
+
+    function selectRecipe(button){
+      const card = button.closest('.item');
+      currentRecipeProduct = {
+        id: card.dataset.id,
+        name: card.dataset.name,
+        price: Number(card.dataset.price)
+      };
+      document.getElementById('uploadTitle').textContent = 'Subir receta para ' + currentRecipeProduct.name;
+      document.getElementById('uploadMessage').textContent = '';
+      document.getElementById('recipeFile').value = '';
+      document.getElementById('uploadArea').style.display = 'block';
+      document.getElementById('recipeFile').focus();
+    }
+
+    function cancelRecipe(){
+      currentRecipeProduct = null;
+      document.getElementById('uploadArea').style.display = 'none';
+      document.getElementById('uploadMessage').textContent = '';
+    }
+
+    function validateRecipe(){
+      const fileInput = document.getElementById('recipeFile');
+      const message = document.getElementById('uploadMessage');
+      const file = fileInput.files[0];
+      if(!file){
+        message.style.color = 'red';
+        message.textContent = 'Selecciona una imagen o PDF de la receta.';
+        return;
+      }
+      const validTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+      if(!validTypes.includes(file.type)){
+        message.style.color = 'red';
+        message.textContent = 'Formato no válido. Usa PDF o imagen.';
+        return;
+      }
+      const nameLower = file.name.toLowerCase();
+      const isValid = nameLower.includes('receta') || nameLower.includes('medico') || file.type === 'application/pdf';
+      if(isValid && currentRecipeProduct){
+        cart.push(currentRecipeProduct);
+        saveCart();
+        renderCart();
+        message.style.color = 'green';
+        message.textContent = 'Receta válida. Producto agregado al carrito.';
+        setTimeout(cancelRecipe, 1200);
+      } else {
+        message.style.color = 'orange';
+        message.textContent = 'La IA no reconoce claramente la receta. Verifica el documento y vuelve a intentarlo.';
+      }
+    }
+
+    function checkout(){
+      const selectedPayment = document.querySelector('input[name="payment"]:checked');
+      const cartMessage = document.getElementById('cartMessage');
+      if(cart.length === 0){
+        cartMessage.style.color = 'red';
+        cartMessage.textContent = 'Agrega productos al carrito antes de pagar.';
+        return;
+      }
+      if(!selectedPayment){
+        cartMessage.style.color = 'red';
+        cartMessage.textContent = 'Selecciona un método de pago.';
+        return;
+      }
+      cartMessage.style.color = 'green';
+      cartMessage.textContent = 'Compra preparada. Método de pago: ' + selectedPayment.value + '.';
+      // Simulación de pago: limpiar carrito
+      cart.length = 0;
+      saveCart();
+      renderCart();
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

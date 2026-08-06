@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contactos - Dali Medica</title>
+  <style>body{font-family:Arial,Helvetica,sans-serif;margin:0}header{display:flex;justify-content:space-between;padding:12px 20px;background:#f7f7f7}.logo{font-weight:700;color:#1a73e8}nav a{margin-left:16px;text-decoration:none;color:#333}.container{padding:24px}form label{display:block;margin-top:8px}form input,form textarea{width:100%;padding:8px;margin-top:4px;border:1px solid #ddd;border-radius:4px}</style>
+</head>
+<body>
+  <header>
+    <div class="logo">dali medica</div>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="productos.html">Productos</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contactos.html">Contactos</a>
+      <a href="crear_usuario.html">Iniciar sesión</a>
+    </nav>
+  </header>
+  <main class="container">
+    <h1>Contáctanos</h1>
+    <form onsubmit="event.preventDefault();alert('Mensaje enviado (demo)')">
+      <label>Nombre</label>
+      <input required>
+      <label>Correo</label>
+      <input type="email" required>
+      <label>Mensaje</label>
+      <textarea rows="5" required></textarea>
+      <button style="margin-top:12px;padding:8px 12px">Enviar</button>
+    </form>
+  </main>
+</body>
+</html>
