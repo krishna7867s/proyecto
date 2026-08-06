@@ -1,0 +1,117 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f8fb;
+    color: #333;
+}
+
+/* Encabezado */
+
+header {
+    background-color: #0d6efd;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+header h1 {
+    font-size: 2rem;
+}
+
+/* Menú */
+
+nav {
+    background-color: #084298;
+    padding: 15px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #d1e7ff;
+}
+
+/* Contenedor de productos */
+
+.productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    padding: 40px;
+}
+
+/* Tarjeta de producto */
+
+.producto {
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s;
+}
+
+.producto:hover {
+    transform: translateY(-5px);
+}
+
+.producto img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.producto h2 {
+    font-size: 1.3rem;
+    padding: 15px;
+    color: #0d6efd;
+}
+
+.producto p {
+    padding: 0 15px 15px;
+    color: #555;
+}
+
+/* Botón */
+
+.boton {
+    display: block;
+    width: 80%;
+    margin: 15px auto 20px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background-color: #198754;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.boton:hover {
+    background-color: #146c43;
+}
+
+/* Pie de página */
+
+footer {
+    background-color: #084298;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
