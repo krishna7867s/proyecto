@@ -15,7 +15,7 @@
         <li><a href="productos.html">Productos</a></li>
         <li><a href="nosotros.html">Nosotros</a></li>
         <li><a href="contactos.html">Contactos</a></li>
-        <li><a href="crear_usuario.html">Iniciar sesión</a></li>
+        <li><a href="login.html">Iniciar sesión</a></li>
       </ul>
     </nav>
   </header>
@@ -35,19 +35,8 @@
     <p style="text-align:center;margin:0;padding:18px 24px;background:#f7f7f7;color:#666;font-size:14px;">&copy; 2026 Dali Medica — Página pública</p>
   </footer>
 
-  <script>
-    document.getElementById('signup').addEventListener('submit', function(e){
-      e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const pwd = document.getElementById('password').value;
-      if(!email||!pwd){return}
-      const user = {email:email};
-      localStorage.setItem('dali_user', JSON.stringify(user));
-      document.getElementById('msg').textContent = 'Usuario creado. Redirigiendo...';
-      setTimeout(()=>{
-        window.location.href = '../pagina%20privada/dashboard.html';
-      },800);
-    });
-  </script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>inicializarRegistro();</script>
 </body>
 </html>
