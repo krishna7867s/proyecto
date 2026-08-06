@@ -142,3 +142,56 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// ---------------------------------------------------------
+// 5. Registro de usuarios nuevos (solo aplica en crear_usuario.html)
+// ---------------------------------------------------------
+
+/**
+ * Registra un usuario nuevo en la lista dali_usuarios, para que después
+ * pueda iniciar sesión desde login.html.
+ * Se conecta automáticamente al formulario id="signup" de crear_usuario.html
+ * (inputs id="email", id="password"; mensaje en id="msg").
+ */
+function inicializarRegistro() {
+  inicializarUsuarios();
+
+  const formSignup = document.getElementById("signup");
+  if (!formSignup) return; // no estamos en crear_usuario.html, no hacer nada más
+
+  const inputEmail = document.getElementById("email");
+  const inputPassword = document.getElementById("password");
+  const mensaje = document.getElementById("msg");
+
+  formSignup.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+
+    const email = inputEmail.value.trim();
+    const password = inputPassword.value;
+
+    if (!email || !password) return;
+
+    const usuarios = JSON.parse(localStorage.getItem(USUARIOS_KEY) || "[]");
+
+    const yaExiste = usuarios.some((u) => u.usuario === email);
+    if (yaExiste) {
+      mensaje.style.color = "#c00";
+      mensaje.textContent = "Ese usuario ya existe. Intenta iniciar sesión.";
+      return;
+    }
+
+    usuarios.push({
+      usuario: email,
+      password: password,
+      nombre: email,
+      rol: "cliente",
+    });
+    localStorage.setItem(USUARIOS_KEY, JSON.stringify(usuarios));
+
+    mensaje.style.color = "green";
+    mensaje.textContent = "Usuario creado. Redirigiendo al login...";
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 800);
+  });
+}
