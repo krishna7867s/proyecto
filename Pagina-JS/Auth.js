@@ -23,8 +23,8 @@ const USUARIOS_KEY = "dali_usuarios";
 
 // Usuarios de prueba: se crean solo la primera vez que corre el sistema
 const USUARIOS_SEMILLA = [
-  { usuario: "admin", password: "admin123", nombre: "Administrador", rol: "admin" },
-  { usuario: "operador", password: "operador123", nombre: "Operador", rol: "operador" },
+  { usuario: "admin", email: "admin@dalimedica.cr", password: "admin123", nombre: "Administrador", rol: "admin" },
+  { usuario: "operador", email: "operador@dalimedica.cr", password: "operador123", nombre: "Operador", rol: "operador" },
 ];
 
 /**
@@ -51,8 +51,9 @@ function inicializarUsuarios() {
 function iniciarSesion(usuario, password) {
   const usuarios = JSON.parse(localStorage.getItem(USUARIOS_KEY) || "[]");
 
+  const credencial = usuario.trim();
   const encontrado = usuarios.find(
-    (u) => u.usuario === usuario.trim() && u.password === password
+    (u) => (u.usuario === credencial || u.email === credencial) && u.password === password
   );
 
   if (!encontrado) {
@@ -159,31 +160,34 @@ function inicializarRegistro() {
   const formSignup = document.getElementById("signup");
   if (!formSignup) return; // no estamos en crear_usuario.html, no hacer nada más
 
-  const inputEmail = document.getElementById("email");
+  const inputUsuario = document.getElementById("usuario");
   const inputPassword = document.getElementById("password");
   const mensaje = document.getElementById("msg");
 
   formSignup.addEventListener("submit", (evento) => {
     evento.preventDefault();
 
-    const email = inputEmail.value.trim();
+    const identificador = inputUsuario.value.trim();
     const password = inputPassword.value;
 
-    if (!email || !password) return;
+    if (!identificador || !password) return;
 
     const usuarios = JSON.parse(localStorage.getItem(USUARIOS_KEY) || "[]");
 
-    const yaExiste = usuarios.some((u) => u.usuario === email);
+    const yaExiste = usuarios.some(
+      (u) => u.usuario === identificador || u.email === identificador
+    );
     if (yaExiste) {
       mensaje.style.color = "#c00";
-      mensaje.textContent = "Ese usuario ya existe. Intenta iniciar sesión.";
+      mensaje.textContent = "Ese usuario o correo ya existe. Intenta iniciar sesión.";
       return;
     }
 
     usuarios.push({
-      usuario: email,
+      usuario: identificador,
+      email: identificador.includes("@") ? identificador : "",
       password: password,
-      nombre: email,
+      nombre: identificador,
       rol: "cliente",
     });
     localStorage.setItem(USUARIOS_KEY, JSON.stringify(usuarios));
