@@ -22,7 +22,7 @@
   </header>
   <main class="container">
     <h1>Panel de administración</h1>
-    <p id="welcome"></p>
+    <p>Bienvenido, <span id="nombreUsuario"></span></p>
     <section>
       <p>Desde aquí puedes organizar clientes, horarios y administrar la tienda.</p>
       <ul>
@@ -39,12 +39,13 @@
     <p style="text-align:center;margin:0;padding:18px 24px;background:#eef6ff;color:#666;font-size:14px;">&copy; 2026 Dali Medica — Área privada</p>
   </footer>
 
+  <script src="../js/auth.js"></script>
   <script>
-    const user = JSON.parse(localStorage.getItem('dali_user')||'null');
-    if(!user){ window.location.href = '../pagina%20publica/index.html'; }
-    document.getElementById('welcome').textContent = user? 'Bienvenido, '+user.email : '';
+    verificarSesion();
+    mostrarInfoUsuario();
     document.getElementById('logout').addEventListener('click', function(e){
-      e.preventDefault(); localStorage.removeItem('dali_user'); window.location.href = '../pagina%20publica/index.html';
+      e.preventDefault();
+      cerrarSesion();
     });
   </script>
 </body>
