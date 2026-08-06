@@ -10,10 +10,12 @@
   <header>
     <div class="logo">dali medica - privado</div>
     <nav class="menu">
-      <a href="clientes.html">Clientes</a>
-      <a href="horarios.html">Horarios</a>
-      <a href="administrar.html">Administrar</a>
-      <a href="#" id="logout">Cerrar sesión</a>
+      <ul style="list-style:none;display:flex;gap:12px;margin:0;padding:0;">
+        <li><a href="clientes.html">Clientes</a></li>
+        <li><a href="horarios.html">Horarios</a></li>
+        <li><a href="administrar.html">Administrar</a></li>
+        <li><a href="#" id="logout">Cerrar sesión</a></li>
+      </ul>
     </nav>
   </header>
   <main class="container">
@@ -28,6 +30,10 @@
       </ul>
     </section>
   </main>
+
+  <footer>
+    <p style="text-align:center;margin:0;padding:18px 24px;background:#eef6ff;color:#666;font-size:14px;">&copy; 2026 Dali Medica — Área privada</p>
+  </footer>
 
   <script>
     const user = JSON.parse(localStorage.getItem('dali_user')||'null');
