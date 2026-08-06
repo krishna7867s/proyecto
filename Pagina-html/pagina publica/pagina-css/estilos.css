@@ -70,11 +70,10 @@ header {
   font-weight: 900;
   text-transform: lowercase;
   letter-spacing: 1.5px;
-  background: var(--brand-gradient);
+ background: var(--brand-gradient);
   -webkit-background-clip: text;
+  background-clip: text; /* <--- Agrega esta línea */
   -webkit-text-fill-color: transparent;
-  display: flex;
-  align-items: center;
 }
 
 .logo::after {
@@ -450,4 +449,103 @@ main.container > section > p[style*="max-width:860px"]:first-of-type:hover::afte
   transform: scale(1.02);
   border-color: rgba(0, 199, 253, 0.8);
   box-shadow: 0 0 35px rgba(0, 199, 253, 0.45), 0 0 70px rgba(147, 51, 234, 0.25);
+}
+
+.grid .list .item {
+  display: flex !important;
+  flex-direction: column !important;
+  background-color: #0b1329 !important; /* Fondo azul noche 100% OPACO */
+  border: 2px solid #00c7fd !important;   /* Borde visible y definido */
+  border-radius: 12px !important;
+  padding: 1.25rem !important;
+  position: relative !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 2. Miniatura de imagen separada FÍSICAMENTE arriba del texto */
+.grid .list .item::before {
+  content: "" !important;
+  order: -1 !important;                 /* Fuerza la imagen arriba */
+  position: relative !important;        /* QUITA la superposición absoluta */
+  top: auto !important;
+  left: auto !important;
+  display: block !important;
+  width: 100% !important;
+  height: 180px !important;              /* Altura de imagen fija */
+  border-radius: 8px !important;
+  margin-bottom: 1.25rem !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 3. Textos con contraste WCAG para baja visión */
+.grid .list .item h3 {
+  color: #ffffff !important;            /* Blanco puro */
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+  margin-bottom: 0.5rem !important;
+  letter-spacing: 0.3px !important;
+}
+
+.grid .list .item p {
+  color: #e2e8f0 !important;            /* Gris casi blanco de máximo contraste */
+  font-size: 0.95rem !important;
+  line-height: 1.5 !important;
+  margin-bottom: 0.6rem !important;
+}
+
+/* Resaltado de precio */
+.grid .list .item p:first-of-type {
+  color: #38bdf8 !important;            /* Cyan brillante */
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+}
+
+/* Botones accesibles con texto en blanco de alto contraste */
+.grid .list .item button {
+  margin-top: auto !important;
+  background: #0068b5 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 1rem !important;
+  padding: 0.85rem 1rem !important;
+  border-radius: 8px !important;
+  border: 2px solid #00c7fd !important;
+  cursor: pointer !important;
+}
+
+.grid .list .item button:hover {
+  background: #0080df !important;
+  box-shadow: 0 0 15px rgba(0, 199, 253, 0.6) !important;
+}
+
+/* --- Asignación de URLs a cada producto por data-id --- */
+.grid .list .item[data-id="protesis"]::before {
+  background-image: url("https://doctorvillanueva.com/wp-content/uploads/2022/10/Cirugia-Minimamente-Invasiva-de-Protesis-de-Rodilla-traumatologo-en-Madrid.jpg") !important;
+}
+
+.grid .list .item[data-id="silla"]::before {
+  background-image: url("https://walmartcr.vtexassets.com/arquivos/ids/953783/15290_01.jpg?v=638864800297300000") !important;
+}
+
+.grid .list .item[data-id="andador"]::before {
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT21MvjiiKIzkD1N5OiQ0_g5nbFVzLao-BYw_py59xnzh1VxPBhG6FV3Ww&s=10") !important;
+}
+
+.grid .list .item[data-id="medX"]::before {
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFUCsaeYkQC9XFYO3QzZVQBOkBtXBX9K8yWcsZLcgdwspT9hU55MMxJDQ&s=10") !important;
+}
+
+.grid .list .item[data-id="medY"]::before {
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1azvoOjgR7p4djFEJ3-WU_1DFMIXzfhAiQ-cZzHREfzVC0pU3pDPlAZeK&s=10") !important;
+}
+
+.grid .list .item[data-id="guantes"]::before {
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc2BLr5s_-EGkIbrD9ZNuYHBaztE55jYtAQ3vdIUqwbA&s=10") !important;
+}
+
+.grid .list .item[data-id="mascarillas"]::before {
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRZt9ZBn0nhXAHHzp7vwSPgVGPYlJdVuUlLrdffh3_63AnrxTH8mT9pN7&s=10") !important;
 }
