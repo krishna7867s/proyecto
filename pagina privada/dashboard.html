@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Dashboard - Dali Medica</title>
+  <style>body{font-family:Arial,Helvetica,sans-serif;margin:0}header{display:flex;justify-content:space-between;padding:12px 20px;background:#eef6ff}.logo{font-weight:700;color:#1a73e8}nav a{margin-left:12px;text-decoration:none;color:#333}.container{padding:24px}.menu{display:flex;gap:12px}</style>
+</head>
+<body>
+  <header>
+    <div class="logo">dali medica - privado</div>
+    <nav class="menu">
+      <a href="clientes.html">Clientes</a>
+      <a href="horarios.html">Horarios</a>
+      <a href="administrar.html">Administrar</a>
+      <a href="#" id="logout">Cerrar sesión</a>
+    </nav>
+  </header>
+  <main class="container">
+    <h1>Panel de administración</h1>
+    <p id="welcome"></p>
+    <section>
+      <p>Desde aquí puedes organizar clientes, horarios y administrar la tienda.</p>
+      <ul>
+        <li><a href="clientes.html">Gestionar clientes</a></li>
+        <li><a href="horarios.html">Gestionar horarios</a></li>
+        <li><a href="administrar.html">Ajustes administrativos</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('dali_user')||'null');
+    if(!user){ window.location.href = '../pagina%20publica/index.html'; }
+    document.getElementById('welcome').textContent = user? 'Bienvenido, '+user.email : '';
+    document.getElementById('logout').addEventListener('click', function(e){
+      e.preventDefault(); localStorage.removeItem('dali_user'); window.location.href = '../pagina%20publica/index.html';
+    });
+  </script>
+</body>
+</html>
