@@ -16,9 +16,9 @@ El sistema permite gestionar de forma centralizada la información de clientes, 
 
 ## Integrantes del equipo
 
-- [Nombre 1] — JavaScript
-- [Nombre 2] — HTML
-- [Nombre 3] — CSS
+- [Sebastian Flores Miranda] — JavaScript
+- [Krishna Moya Cervantes] — HTML
+- [Sebastian Vallecillo Moya] — CSS
 
 ## Funcionalidades
 
