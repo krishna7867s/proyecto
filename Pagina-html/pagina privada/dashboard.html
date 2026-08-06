@@ -12,6 +12,8 @@
     <nav class="menu">
       <ul style="list-style:none;display:flex;gap:12px;margin:0;padding:0;">
         <li><a href="clientes.html">Clientes</a></li>
+        <li><a href="proveedores.html">Proveedores</a></li>
+        <li><a href="productos-admin.html">Productos</a></li>
         <li><a href="horarios.html">Horarios</a></li>
         <li><a href="administrar.html">Administrar</a></li>
         <li><a href="#" id="logout">Cerrar sesión</a></li>
@@ -20,11 +22,13 @@
   </header>
   <main class="container">
     <h1>Panel de administración</h1>
-    <p id="welcome"></p>
+    <p>Bienvenido, <span id="nombreUsuario"></span></p>
     <section>
       <p>Desde aquí puedes organizar clientes, horarios y administrar la tienda.</p>
       <ul>
         <li><a href="clientes.html">Gestionar clientes</a></li>
+        <li><a href="proveedores.html">Gestionar proveedores</a></li>
+        <li><a href="productos-admin.html">Gestionar productos</a></li>
         <li><a href="horarios.html">Gestionar horarios</a></li>
         <li><a href="administrar.html">Ajustes administrativos</a></li>
       </ul>
@@ -35,12 +39,13 @@
     <p style="text-align:center;margin:0;padding:18px 24px;background:#eef6ff;color:#666;font-size:14px;">&copy; 2026 Dali Medica — Área privada</p>
   </footer>
 
+  <script src="../js/auth.js"></script>
   <script>
-    const user = JSON.parse(localStorage.getItem('dali_user')||'null');
-    if(!user){ window.location.href = '../pagina%20publica/index.html'; }
-    document.getElementById('welcome').textContent = user? 'Bienvenido, '+user.email : '';
+    verificarSesion();
+    mostrarInfoUsuario();
     document.getElementById('logout').addEventListener('click', function(e){
-      e.preventDefault(); localStorage.removeItem('dali_user'); window.location.href = '../pagina%20publica/index.html';
+      e.preventDefault();
+      cerrarSesion();
     });
   </script>
 </body>

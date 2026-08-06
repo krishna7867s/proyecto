@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Proveedores - Dali Medica</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0}
+    header{display:flex;justify-content:space-between;padding:12px 20px;background:#eef6ff}
+    .logo{font-weight:700;color:#1a73e8}
+    nav ul{list-style:none;display:flex;margin:0;padding:0}
+    nav li{margin-right:12px}
+    nav a{text-decoration:none;color:#333}
+    .container{padding:24px}
+    form{max-width:700px;margin-bottom:24px}
+    label{display:block;margin:10px 0 4px}
+    input,select,textarea{width:100%;padding:8px;border:1px solid #ccc;border-radius:6px}
+    button{margin-top:12px;padding:10px 16px;border:none;border-radius:6px;background:#1a73e8;color:#fff;cursor:pointer}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px;border:1px solid #ddd;text-align:left}
+    .actions button{margin-right:8px;background:#5f6368}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">dali medica - privado</div>
+    <nav>
+      <ul>
+        <li><a href="dashboard.html">Volver</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    <h1>Proveedores</h1>
+    <p>Registra, consulta, edita y elimina proveedores de la cadena de suministro.</p>
+    <form id="providerForm">
+      <input type="hidden" id="providerId">
+      <label for="providerName">Nombre de la empresa</label>
+      <input id="providerName" required>
+      <label for="providerContact">Contacto</label>
+      <input id="providerContact" required>
+      <label for="providerEmail">Correo electrónico</label>
+      <input id="providerEmail" type="email" required>
+      <label for="providerPhone">Teléfono</label>
+      <input id="providerPhone" required>
+      <label for="providerNotes">Notas</label>
+      <textarea id="providerNotes" rows="3"></textarea>
+      <button type="submit">Guardar proveedor</button>
+    </form>
+    <table>
+      <thead>
+        <tr><th>Empresa</th><th>Contacto</th><th>Correo</th><th>Teléfono</th><th>Notas</th><th>Acciones</th></tr>
+      </thead>
+      <tbody id="providerList"></tbody>
+    </table>
+  </main>
+  <footer>
+    <p style="text-align:center;margin:0;padding:18px 24px;background:#eef6ff;color:#666;font-size:14px;">&copy; 2026 Dali Medica — Área privada</p>
+  </footer>
+  <script src="../js/auth.js"></script>
+  <script>
+    verificarSesion();
+    const providerForm = document.getElementById('providerForm');
+    const providerList = document.getElementById('providerList');
+    let providers = JSON.parse(localStorage.getItem('dali_providers')||'[]');
+    let editingId = null;
+
+    function saveProviders(){
+      localStorage.setItem('dali_providers', JSON.stringify(providers));
+    }
+
+    function renderProviders(){
+      providerList.innerHTML = '';
+      providers.forEach((provider,index)=>{
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${provider.name}</td>
+          <td>${provider.contact}</td>
+          <td>${provider.email}</td>
+          <td>${provider.phone}</td>
+          <td>${provider.notes}</td>
+          <td class="actions">
+            <button type="button" onclick="editProvider(${index})">Editar</button>
+            <button type="button" onclick="deleteProvider(${index})">Eliminar</button>
+          </td>
+        `;
+        providerList.appendChild(row);
+      });
+    }
+
+    function editProvider(index){
+      const provider = providers[index];
+      editingId = index;
+      document.getElementById('providerId').value = index;
+      document.getElementById('providerName').value = provider.name;
+      document.getElementById('providerContact').value = provider.contact;
+      document.getElementById('providerEmail').value = provider.email;
+      document.getElementById('providerPhone').value = provider.phone;
+      document.getElementById('providerNotes').value = provider.notes;
+    }
+
+    function deleteProvider(index){
+      providers.splice(index,1);
+      saveProviders();
+      renderProviders();
+    }
+
+    providerForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const provider = {
+        name: document.getElementById('providerName').value.trim(),
+        contact: document.getElementById('providerContact').value.trim(),
+        email: document.getElementById('providerEmail').value.trim(),
+        phone: document.getElementById('providerPhone').value.trim(),
+        notes: document.getElementById('providerNotes').value.trim(),
+      };
+      if(editingId !== null){
+        providers[editingId] = provider;
+      } else {
+        providers.push(provider);
+      }
+      saveProviders();
+      renderProviders();
+      providerForm.reset();
+      editingId = null;
+    });
+
+    renderProviders();
+  </script>
+</body>
+</html>
