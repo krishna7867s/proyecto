@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Productos Admin - Dali Medica</title>
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;margin:0}
+    header{display:flex;justify-content:space-between;padding:12px 20px;background:#eef6ff}
+    .logo{font-weight:700;color:#1a73e8}
+    nav ul{list-style:none;display:flex;margin:0;padding:0}
+    nav li{margin-right:12px}
+    nav a{text-decoration:none;color:#333}
+    .container{padding:24px}
+    form{max-width:700px;margin-bottom:24px}
+    label{display:block;margin:10px 0 4px}
+    input,select,textarea{width:100%;padding:8px;border:1px solid #ccc;border-radius:6px}
+    button{margin-top:12px;padding:10px 16px;border:none;border-radius:6px;background:#1a73e8;color:#fff;cursor:pointer}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px;border:1px solid #ddd;text-align:left}
+    .actions button{margin-right:8px;background:#5f6368}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">dali medica - privado</div>
+    <nav>
+      <ul>
+        <li><a href="dashboard.html">Volver</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    <h1>Productos Admin</h1>
+    <p>Registra, consulta, edita y elimina productos del inventario.</p>
+    <form id="productForm">
+      <input type="hidden" id="productId">
+      <label for="productName">Nombre del producto</label>
+      <input id="productName" required>
+      <label for="productType">Tipo</label>
+      <select id="productType" required>
+        <option value="">Selecciona tipo</option>
+        <option value="Prótesis">Prótesis</option>
+        <option value="Medicamento">Medicamento</option>
+        <option value="Insumo">Insumo</option>
+        <option value="Equipo">Equipo</option>
+      </select>
+      <label for="productPrice">Precio (colones)</label>
+      <input id="productPrice" type="number" required>
+      <label for="productRequiresPrescription">Requiere receta</label>
+      <select id="productRequiresPrescription" required>
+        <option value="no">No</option>
+        <option value="si">Sí</option>
+      </select>
+      <label for="productDescription">Descripción</label>
+      <textarea id="productDescription" rows="3"></textarea>
+      <button type="submit">Guardar producto</button>
+    </form>
+    <table>
+      <thead>
+        <tr><th>Nombre</th><th>Tipo</th><th>Precio</th><th>Receta</th><th>Descripción</th><th>Acciones</th></tr>
+      </thead>
+      <tbody id="productList"></tbody>
+    </table>
+  </main>
+  <footer>
+    <p style="text-align:center;margin:0;padding:18px 24px;background:#eef6ff;color:#666;font-size:14px;">&copy; 2026 Dali Medica — Área privada</p>
+  </footer>
+  <script>
+    const productForm = document.getElementById('productForm');
+    const productList = document.getElementById('productList');
+    let products = JSON.parse(localStorage.getItem('dali_products')||'[]');
+    let editingId = null;
+
+    function saveProducts(){
+      localStorage.setItem('dali_products', JSON.stringify(products));
+    }
+
+    function formatPrice(amount){
+      return '₡' + Number(amount).toLocaleString('es-CR');
+    }
+
+    function renderProducts(){
+      productList.innerHTML = '';
+      products.forEach((product,index)=>{
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${product.name}</td>
+          <td>${product.type}</td>
+          <td>${formatPrice(product.price)}</td>
+          <td>${product.prescription === 'si' ? 'Sí' : 'No'}</td>
+          <td>${product.description}</td>
+          <td class="actions">
+            <button type="button" onclick="editProduct(${index})">Editar</button>
+            <button type="button" onclick="deleteProduct(${index})">Eliminar</button>
+          </td>
+        `;
+        productList.appendChild(row);
+      });
+    }
+
+    function editProduct(index){
+      const product = products[index];
+      editingId = index;
+      document.getElementById('productId').value = index;
+      document.getElementById('productName').value = product.name;
+      document.getElementById('productType').value = product.type;
+      document.getElementById('productPrice').value = product.price;
+      document.getElementById('productRequiresPrescription').value = product.prescription;
+      document.getElementById('productDescription').value = product.description;
+    }
+
+    function deleteProduct(index){
+      products.splice(index,1);
+      saveProducts();
+      renderProducts();
+    }
+
+    productForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const product = {
+        name: document.getElementById('productName').value.trim(),
+        type: document.getElementById('productType').value,
+        price: Number(document.getElementById('productPrice').value),
+        prescription: document.getElementById('productRequiresPrescription').value,
+        description: document.getElementById('productDescription').value.trim(),
+      };
+      if(editingId !== null){
+        products[editingId] = product;
+      } else {
+        products.push(product);
+      }
+      saveProducts();
+      renderProducts();
+      productForm.reset();
+      editingId = null;
+    });
+
+    renderProducts();
+  </script>
+</body>
+</html>
