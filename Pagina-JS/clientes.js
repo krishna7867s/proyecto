@@ -54,6 +54,7 @@ function editClient(index) {
   editingId = index;
   document.getElementById("clientId").value = index;
   document.getElementById("clientName").value = client.name;
+  
   document.getElementById("clientEmail").value = client.email;
   document.getElementById("clientPhone").value = client.phone;
   document.getElementById("clientNotes").value = client.notes;
