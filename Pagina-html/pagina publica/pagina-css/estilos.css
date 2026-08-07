@@ -423,27 +423,6 @@ footer {
   }
 }
 
-main.container > section > p[style*="max-width:860px"]:first-of-type::after {
-  content: "";
-  display: block;
-  width: 100%;
-  max-width: 480px;
-  height: 240px;
-  margin: 2.2rem auto 2.2rem auto;
-  
-  /* Carga de la imagen enviada */
-  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQqVqxTYYYU1H7kERam8W0_y0IqFZyE8tObzx2QgGcYXm1GKZzJTM5ml0L&s=10");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  
-  /* Bordes, resplandor y estilo Intel */
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(0, 199, 253, 0.4);
-  box-shadow: 0 0 25px rgba(0, 199, 253, 0.25), 0 0 50px rgba(147, 51, 234, 0.15);
-  transition: var(--transition);
-}
-
 /* Efecto hover interactivo al pasar el cursor sobre la imagen */
 main.container > section > p[style*="max-width:860px"]:first-of-type:hover::after {
   transform: scale(1.02);
@@ -549,3 +528,4 @@ main.container > section > p[style*="max-width:860px"]:first-of-type:hover::afte
 .grid .list .item[data-id="mascarillas"]::before {
   background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRZt9ZBn0nhXAHHzp7vwSPgVGPYlJdVuUlLrdffh3_63AnrxTH8mT9pN7&s=10") !important;
 }
+
