@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Crear usuario - Dali Medica</title>
-  <style>body{font-family:Arial,Helvetica,sans-serif;margin:0}header{display:flex;justify-content:space-between;padding:12px 20px;background:#f7f7f7}.logo{font-weight:700;color:#1a73e8}nav a{margin-left:16px;text-decoration:none;color:#333}.container{padding:24px}form{max-width:380px}label{display:block;margin-top:10px}input{width:100%;padding:8px;margin-top:6px;border:1px solid #ddd;border-radius:4px}button{margin-top:12px;padding:8px 12px}</style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
     <div class="logo">dali medica</div>
     <nav>
-      <ul style="list-style:none;display:flex;gap:16px;margin:0;padding:0;">
+      <ul>
         <li><a href="index.html">Inicio</a></li>
         <li><a href="productos.html">Productos</a></li>
         <li><a href="nosotros.html">Nosotros</a></li>
@@ -28,11 +28,11 @@
       <input id="password" type="password" required>
       <button type="submit">Crear usuario</button>
     </form>
-    <p id="msg" style="color:green"></p>
+    <p id="msg"></p>
   </main>
 
   <footer>
-    <p style="text-align:center;margin:0;padding:18px 24px;background:#f7f7f7;color:#666;font-size:14px;">&copy; 2026 Dali Medica — Página pública</p>
+    <p class="footer-copy">&copy; 2026 Dali Medica — Página pública</p>
   </footer>
 
   <script src="../../Pagina-JS/auth.js"></script>
