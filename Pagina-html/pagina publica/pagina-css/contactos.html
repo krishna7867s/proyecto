@@ -1,10 +1,158 @@
-<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Contactos - Dali Medica</title>
   <link rel="stylesheet" href="../pagina-css/estilos.css">
+  
+  <style>
+    .contact-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .contact-header h1 {
+      font-size: 2.5rem;
+      color: var(--text-bright);
+    }
+
+    .contact-header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 650px;
+      margin: 0.5rem auto 0;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    /* Tarjetas de Información de Contacto */
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+      backdrop-filter: blur(16px);
+      transition: var(--transition);
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+    }
+
+    .info-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--glow-intel);
+      border-color: rgba(0, 199, 253, 0.5);
+    }
+
+    .info-icon {
+      font-size: 1.8rem;
+      background: rgba(0, 199, 253, 0.1);
+      border: 1px solid rgba(0, 199, 253, 0.3);
+      padding: 0.8rem;
+      border-radius: var(--radius-md);
+      line-height: 1;
+    }
+
+    .info-content h3 {
+      color: var(--accent-cyan);
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .info-content p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Estilizado avanzado para el Formulario */
+    .contact-form-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      backdrop-filter: blur(16px);
+      box-shadow: var(--glow-intel);
+    }
+
+    .contact-form-container form {
+      background: transparent;
+      border: none;
+      padding: 0;
+      box-shadow: none;
+      max-width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .contact-form-container label {
+      display: block;
+      color: var(--accent-cyan);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-form-container input,
+    .contact-form-container textarea {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      background: rgba(3, 7, 18, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      color: #ffffff;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .contact-form-container input:focus,
+    .contact-form-container textarea:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 15px rgba(0, 199, 253, 0.3);
+    }
+
+    .contact-form-container button {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--brand-gradient);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 0 20px rgba(0, 104, 181, 0.4);
+    }
+
+    .contact-form-container button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(0, 199, 253, 0.6);
+    }
+
+    @media (max-width: 850px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -19,21 +167,69 @@
       </ul>
     </nav>
   </header>
+
   <main class="container">
-    <h1>Contáctanos</h1>
-    <form id="contactForm">
-      <label for="contact-name">Nombre</label>
-      <input id="contact-name" required>
-      <label for="contact-email">Correo</label>
-      <input id="contact-email" type="email" required>
-      <label for="contact-message">Mensaje</label>
-      <textarea id="contact-message" rows="5" required></textarea>
-      <button style="margin-top:12px;padding:8px 12px">Enviar</button>
-    </form>
+    <section class="contact-header">
+      <h1>¿Necesitas atención personalizada?</h1>
+      <p>Ponte en contacto con nuestro equipo especializado para soporte de pedidos, cotizaciones institucionales o consultas normativas.</p>
+    </section>
+
+    <div class="contact-grid">
+      <!-- Información de Contacto -->
+      <div class="contact-info">
+        <article class="info-card">
+          <div class="info-icon">📍</div>
+          <div class="info-content">
+            <h3>Ubicación Central</h3>
+            <p>San José, Costa Rica — Atención a centros médicos y clínicas en todo el país.</p>
+          </div>
+        </article>
+
+        <article class="info-card">
+          <div class="info-icon">📧</div>
+          <div class="info-content">
+            <h3>Correo Electrónico</h3>
+            <p>soporte@dalimedica.cr<br>ventas@dalimedica.cr</p>
+          </div>
+        </article>
+
+        <article class="info-card">
+          <div class="info-icon">⚡</div>
+          <div class="info-content">
+            <h3>Atención Inmediata</h3>
+            <p>Soporte digital disponible 24/7 para gestión de pedidos e insumos urgentes.</p>
+          </div>
+        </article>
+      </div>
+
+      <!-- Formulario de Contacto -->
+      <div class="contact-form-container">
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="contact-name">Nombre Completo</label>
+            <input id="contact-name" placeholder="Ej. Dr. Carlos Mendoza" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-email">Correo Electrónico</label>
+            <input id="contact-email" type="email" placeholder="ejemplo@clinica.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-message">Mensaje o Consulta</label>
+            <textarea id="contact-message" rows="5" placeholder="Escribe aquí los detalles de tu consulta o requerimiento..." required></textarea>
+          </div>
+
+          <button type="submit">Enviar Mensaje</button>
+        </form>
+      </div>
+    </div>
   </main>
+
   <footer>
     <p style="text-align:center;margin:0;padding:18px 24px;background:#f7f7f7;color:#666;font-size:14px;">&copy; 2026 Dali Medica — Página pública</p>
   </footer>
+
   <script src="pagina-css/contactos.js"></script>
 </body>
 </html>

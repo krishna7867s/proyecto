@@ -1,16 +1,95 @@
-<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Nosotros - Dali Medica</title>
- <link rel="stylesheet" href="../pagina-css/estilos.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sobre Nosotros - Dali Medica</title>
+   <link rel="stylesheet" href="../pagina-css/estilos.css">
+  
+  <style>
+    .about-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .about-header h1 {
+      font-size: 2.5rem;
+      color: var(--text-bright);
+    }
+
+    .about-header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0.5rem auto 0;
+    }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .value-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      backdrop-filter: blur(16px);
+      transition: var(--transition);
+    }
+
+    .value-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--glow-intel);
+      border-color: rgba(0, 199, 253, 0.5);
+    }
+
+    .value-card h2 {
+      color: var(--accent-cyan);
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .value-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .stats-banner {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(0, 199, 253, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .stat-item h3 {
+      font-size: 2.2rem;
+      color: var(--accent-cyan);
+      font-weight: 800;
+    }
+
+    .stat-item p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
 </head>
+
 <body>
   <header>
     <div class="logo">dali medica</div>
     <nav>
-      <ul style="list-style:none;display:flex;gap:16px;margin:0;padding:0;">
+      <ul style="list-style: none; display: flex; gap: 16px; margin: 0; padding: 0;">
         <li><a href="index.html">Inicio</a></li>
         <li><a href="productos.html">Productos</a></li>
         <li><a href="nosotros.html">Nosotros</a></li>
@@ -19,12 +98,50 @@
       </ul>
     </nav>
   </header>
+
   <main class="container">
-    <h1>Sobre nosotros</h1>
-    <p>Dali Medica provee equipos y suministros para centros de salud con calidad y servicio.</p>
+    <section class="about-header">
+      <h1>Innovación y Confianza en Salud</h1>
+      <p>Transformando el suministro médico en Costa Rica mediante tecnología de vanguardia, validación rigurosa y atención personalizada.</p>
+    </section>
+
+    <div class="values-grid">
+      <article class="value-card">
+        <h2>Nuestra Misión</h2>
+        <p>Facilitar el acceso a insumos y equipos médicos de alta calidad a clínicas, centros de salud y pacientes particulares, asegurando eficiencia y cumplimiento normativo en cada entrega.</p>
+      </article>
+
+      <article class="value-card">
+        <h2>Nuestra Visión</h2>
+        <p>Ser la plataforma digital B2B y B2C referente en Centroamérica para la distribución de tecnología médica y medicamentos de alta especialidad.</p>
+      </article>
+
+      <article class="value-card">
+        <h2>Compromiso y Seguridad</h2>
+        <p>Garantizamos la autenticidad y seguridad de nuestros productos mediante protocolos de verificación de recetas médicas y alianzas exclusivas con proveedores certificados.</p>
+      </article>
+    </div>
+
+    <section class="stats-banner">
+      <div class="stat-item">
+        <h3>100%</h3>
+        <p>Certificado Sanitario</p>
+      </div>
+      <div class="stat-item">
+        <h3>24/7</h3>
+        <p>Gestión Digital</p>
+      </div>
+      <div class="stat-item">
+        <h3>+500</h3>
+        <p>Productos en Catálogo</p>
+      </div>
+    </section>
   </main>
+
   <footer>
-    <p style="text-align:center;margin:0;padding:18px 24px;background:#f7f7f7;color:#666;font-size:14px;">&copy; 2026 Dali Medica — Página pública</p>
+    <p style="text-align: center; margin: 0; padding: 18px 24px; background: #f7f7f7; color: #666; font-size: 14px;">
+      &copy; 2026 Dali Medica — Página pública
+    </p>
   </footer>
 </body>
 </html>
