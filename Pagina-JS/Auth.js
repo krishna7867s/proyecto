@@ -76,7 +76,8 @@ function iniciarSesion(usuario, password) {
  */
 function cerrarSesion() {
   localStorage.removeItem(SESION_KEY);
-  window.location.href = "login.html";
+  // Se llama desde pagina privada/ → login está un nivel arriba en pagina publica/
+  window.location.href = "../pagina publica/login.html";
 }
 
 // ---------------------------------------------------------
@@ -98,7 +99,8 @@ function obtenerSesion() {
 function verificarSesion() {
   const sesion = obtenerSesion();
   if (!sesion) {
-    window.location.href = "login.html";
+    // Se llama desde pagina privada/ → login está un nivel arriba en pagina publica/
+    window.location.href = "../pagina publica/login.html";
     return null;
   }
   return sesion;
@@ -136,7 +138,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const resultado = iniciarSesion(inputUsuario.value, inputPassword.value);
 
     if (resultado.ok) {
-      window.location.href = "dashboard.html";
+      // login.html está en pagina publica/ → dashboard está en pagina privada/
+      window.location.href = "../pagina privada/dashboard.html";
     } else {
       mensajeError.textContent = resultado.mensaje;
       mensajeError.style.display = "block";
@@ -195,6 +198,7 @@ function inicializarRegistro() {
     mensaje.style.color = "green";
     mensaje.textContent = "Usuario creado. Redirigiendo al login...";
     setTimeout(() => {
+      // crear_usuario.html está en pagina publica/ → login.html también está ahí
       window.location.href = "login.html";
     }, 800);
   });
