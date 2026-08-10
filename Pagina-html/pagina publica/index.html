@@ -3,23 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Dali Medica  Inicio</title>
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;margin:0;color:#333}
-    header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:#f7f7f7;border-bottom:1px solid #e0e0e0}
-    .logo{font-weight:700;font-size:18px;color:#1a73e8}
-    nav a{margin-left:16px;text-decoration:none;color:#333}
-    .container{padding:24px}
-    .grid{display:flex;gap:16px;flex-wrap:wrap}
-    .card{border:1px solid #e6e6e6;padding:16px;width:240px;background:#fff;border-radius:6px}
-    footer{padding:12px 20px;background:#fafafa;border-top:1px solid #eee;text-align:center;font-size:14px;color:#666}
-  </style>
+  <title>Dali Medica J Inicio</title>
+  <link rel="stylesheet" href="../Pagina-css/estilos.css">
 </head>
 <body>
   <header>
     <div class="logo">dali medica</div>
     <nav>
-      <ul style="list-style:none;display:flex;gap:16px;margin:0;padding:0;">
+      <ul>
         <li><a href="index.html">Inicio</a></li>
         <li><a href="productos.html">Productos</a></li>
         <li><a href="nosotros.html">Nosotros</a></li>
@@ -30,23 +21,40 @@
   </header>
 
   <main class="container">
-    <section style="text-align:center;padding:40px 0;">
-      <div style="font-size:32px;font-weight:800;color:#1a73e8;letter-spacing:2px;margin-bottom:16px;">dali medica</div>
-      <p style="max-width:860px;margin:0 auto;font-size:18px;line-height:1.8;color:#444;">
+    <section class="hero">
+      <div class="hero-title">dali medica</div>
+      <p>
         Dali Medica es la plataforma confiable para el suministro integral de productos médicos en Costa Rica. Nuestro compromiso es ofrecer desde prótesis y equipos especializados hasta insumos de uso diario, siempre con la garantía de servicio profesional, asesoría técnica y cumplimiento normativo. Trabajamos con proveedores certificados para que los centros médicos, clínicas y profesionales de la salud cuenten con las mejores soluciones en cada etapa del proceso de atención.
       </p>
-      <p style="max-width:860px;margin:18px auto 0;font-size:18px;line-height:1.8;color:#444;">
+      <p>
         En Dali Medica ponemos a su disposición un catálogo amplio que incluye artículos de alta tecnología y medicinas indispensables. Algunos productos requieren receta médica y el proceso de validación se realiza con cuidado para proteger la salud de los pacientes y cumplir con las normas sanitarias vigentes. Nuestro enfoque es acompañar a cada cliente con información clara, atención personalizada y entregas seguras en todo el país.
       </p>
-      <p style="margin-top:26px;">
-        <a href="productos.html" style="display:inline-block;padding:14px 22px;background:#1a73e8;color:#fff;border-radius:8px;text-decoration:none;font-weight:700;">Ver productos</a>
+      <p>
+        <a href="productos.html">Ver productos</a>
       </p>
     </section>
-    <p style="text-align:center;margin-top:40px;font-size:14px;color:#666;">Se reserva los derechos de admisión.</p>
+    <p class="note">Se reserva los derechos de admisión.</p>
   </main>
 
   <footer>
-    <p style="text-align:center;margin:0;padding:18px 24px;background:#f7f7f7;color:#666;font-size:14px;">&copy; 2026 Dali Medica — Página pública</p>
+    <div class="footer-content">
+      <div class="footer-block">
+        <h3>Suscríbete a noticias</h3>
+        <p>Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
+        <form>
+          <label for="newsletter-email">Correo electrónico</label>
+          <input id="newsletter-email" type="email" placeholder="Tu correo" required>
+          <button type="submit">Registrarme</button>
+        </form>
+      </div>
+      <div class="footer-block">
+        <h3>Contáctanos</h3>
+        <p><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
+        <p><strong>Correo:</strong> contacto@dalimedica.com</p>
+        <p>Centro Médico Dali Medica · San José, Costa Rica</p>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2026 Dali Medica — Página pública</p>
   </footer>
 </body>
 </html>

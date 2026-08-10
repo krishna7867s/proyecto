@@ -4,32 +4,52 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Login - Dali Medica</title>
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f5f7fb}
-    .page{max-width:420px;margin:80px auto;padding:24px;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-    h1{margin:0 0 18px;font-size:24px;color:#1a73e8}
-    label{display:block;margin-bottom:8px;font-weight:600}
-    input{width:100%;padding:10px;margin-bottom:16px;border:1px solid #ccc;border-radius:8px}
-    button{width:100%;padding:12px;border:none;border-radius:8px;background:#1a73e8;color:#fff;font-size:16px;cursor:pointer}
-    p{margin:12px 0 0;color:#333}
-    .link{margin-top:14px;font-size:14px;color:#555}
-    .error{color:#c00;font-weight:700}
-  </style>
+  <link rel="stylesheet" href="../Pagina-css/estilos.css">
 </head>
 <body>
   <div class="page">
     <h1>Iniciar sesión</h1>
     <form id="formLogin">
-      <label for="usuario">Usuario</label>
-      <input id="usuario" type="email" required>
+      <label for="usuario">Usuario o correo electrónico</label>
+      <input id="usuario" type="text" required>
       <label for="password">Contraseña</label>
-      <input id="password" type="password" required>
+      <div style="position:relative;">
+        <input id="password" type="password" required autocomplete="current-password" style="width:100%;padding-right:40px;">
+        <button type="button" id="togglePassword" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;">👁️</button>
+      </div>
       <button type="submit">Entrar</button>
-      <p id="mensajeError" class="error" aria-live="polite" style="display:none"></p>
+      <p id="mensajeError" class="error" aria-live="polite"></p>
     </form>
     <p class="link">¿No tienes cuenta? <a href="crear_usuario.html">Crear usuario</a></p>
   </div>
 
-  <script src="../js/auth.js"></script>
+  <footer>
+    <div class="footer-content">
+      <div class="footer-block">
+        <h3>Suscríbete a noticias</h3>
+        <p>Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
+        <form>
+          <label for="newsletter-email-login">Correo electrónico</label>
+          <input id="newsletter-email-login" type="email" placeholder="Tu correo" required>
+          <button type="submit">Registrarme</button>
+        </form>
+      </div>
+      <div class="footer-block">
+        <h3>Contáctanos</h3>
+        <p><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
+        <p><strong>Correo:</strong> contacto@dalimedica.com</p>
+        <p>Centro Médico Dali Medica · San José, Costa Rica</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../Pagina-JS/storage.js"></script>
+  <script src="../../Pagina-JS/auth.js"></script>
+  <script>
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const input = document.getElementById('password');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    });
+  </script>
 </body>
 </html>
