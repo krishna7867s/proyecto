@@ -25,7 +25,10 @@
       <label>Usuario o correo electrónico</label>
       <input id="usuario" type="text" required>
       <label>Contraseña</label>
-      <input id="password" type="password" required>
+      <div style="position:relative;">
+        <input id="password" type="password" required autocomplete="current-password" style="width:100%;padding-right:40px;">
+        <button type="button" id="togglePassword" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;">👁️</button>
+      </div>
       <button type="submit">Crear usuario</button>
     </form>
     <p id="msg"></p>
@@ -35,7 +38,14 @@
     <p class="footer-copy">&copy; 2026 Dali Medica — Página pública</p>
   </footer>
 
+  <script src="../../Pagina-JS/storage.js"></script>
   <script src="../../Pagina-JS/auth.js"></script>
   <script>inicializarRegistro();</script>
+  <script>
+    document.getElementById('togglePassword').addEventListener('click', function() {
+      const input = document.getElementById('password');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    });
+  </script>
 </body>
 </html>
