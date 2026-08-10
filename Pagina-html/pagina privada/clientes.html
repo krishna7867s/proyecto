@@ -30,12 +30,14 @@
       <textarea id="clientNotes" rows="3"></textarea>
       <button type="submit">Guardar cliente</button>
     </form>
+    <input id="searchClient" type="search" placeholder="Buscar cliente">
     <table>
       <thead>
         <tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Notas</th><th>Acciones</th></tr>
       </thead>
       <tbody id="clientList"></tbody>
     </table>
+    <div id="paginationControls"></div>
   </main>
   <footer style="margin-top:40px;padding:24px 20px;background:#eef6ff;border-top:1px solid #dce9f8;color:#555;">
     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:flex-start;max-width:1200px;margin:0 auto;">
