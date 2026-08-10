@@ -64,25 +64,51 @@ header {
 }
 
 .logo {
-  font-size: 1.6rem;
+  font-size: 1.75rem;
   font-weight: 900;
   text-transform: lowercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.7px;
   background: var(--brand-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
 }
 
 .logo::after {
   content: '';
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   background: var(--accent-cyan);
   border-radius: 50%;
   margin-left: 6px;
-  box-shadow: 0 0 12px var(--accent-cyan);
+  box-shadow: 0 0 14px var(--accent-cyan);
+}
+
+header .session-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(0, 199, 253, 0.12);
+  border: 1px solid rgba(0, 199, 253, 0.22);
+  color: var(--accent-cyan);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  margin-left: 1rem;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+header .session-badge::before {
+  content: '•';
+  margin-right: 0.5rem;
+  color: var(--accent-cyan);
+  transform: scale(1.2);
 }
 
 nav ul {

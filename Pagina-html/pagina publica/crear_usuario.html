@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="Pagina-css/estilos.css">
 </head>
 <body>
+  <!-- HEADER (Usando exactamente las clases de tu CSS) -->
   <header>
     <a href="index.html" class="logo">dali medica</a>
     <nav>
@@ -20,71 +21,117 @@
     </nav>
   </header>
 
-  <main class="container">
-    <h1>Crear usuario</h1>
-    <form id="signup">
-      <label>Usuario o correo electrónico</label>
-      <input id="usuario" type="text" required>
-      <label>Contraseña</label>
-      <div style="position:relative;">
-        <input id="password" type="password" required autocomplete="current-password" style="width:100%;padding-right:40px;">
-        <button type="button" id="togglePassword" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.2rem;">👁️</button>
-      </div>
-      <button type="submit">Crear usuario</button>
-    </form>
-    <p id="msg"></p>
+  <main>
+    <div class="page">
+      <h1>Crear usuario</h1>
+      
+      <form id="signupForm">
+        <label>Usuario o correo electrónico</label>
+        <input id="usuario" type="text" required>
+
+        <label>Contraseña</label>
+        <!-- Caja con el ojo adentro -->
+        <div style="position:relative; width:100%;">
+          <input id="password" type="password" required style="width:100%; padding-right: 40px;">
+          <button type="button" id="togglePassword" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#94a3b8; font-size:1.2rem;">👁️</button>
+        </div>
+
+        <button type="submit" id="btnCrearUsuario">Crear usuario</button>
+      </form>
+      
+      <p id="msg" class="error" style="display:none;"></p>
+      
+      <p class="link">
+        <a href="login.html">¿Ya tienes cuenta? Inicia sesión</a>
+      </p>
+    </div>
   </main>
 
   <footer>
-    <div class="footer-container">
-      <div class="footer-row">
-        <div class="footer-col">
-          <h3>dali medica</h3>
-          <p>Suministro integral de productos médicos en Costa Rica.</p>
-          <div class="footer-socials">
-            <a href="#">📘</a>
-            <a href="#">📸</a>
-            <a href="#">🐦</a>
-            <a href="#">💼</a>
-          </div>
-        </div>
-        <div class="footer-col">
-          <h4>Enlaces rápidos</h4>
-          <ul>
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="productos.html">Productos</a></li>
-            <li><a href="nosotros.html">Nosotros</a></li>
-            <li><a href="contactos.html">Contactos</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Contacto</h4>
-          <p>📞 +506 2222-3333</p>
-          <p>📱 +506 8888-9999</p>
-          <p>✉️ contacto@dalimedica.com</p>
-          <p>📍 San José, Costa Rica</p>
-        </div>
-        <div class="footer-col">
-          <h4>Suscríbete</h4>
-          <p>Recibe novedades y promociones.</p>
-          <form>
-            <input type="email" placeholder="Tu correo" required>
-            <button type="submit">Suscribirme</button>
-          </form>
-        </div>
+    <div class="footer-content">
+      <div class="footer-block">
+        <h3>dali medica</h3>
+        <p>Suministro integral de productos médicos en Costa Rica.</p>
       </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 Dali Medica — Todos los derechos reservados.</p>
+      <div class="footer-block">
+        <h4>Enlaces rápidos</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="productos.html">Productos</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contactos.html">Contactos</a></li>
+        </ul>
+      </div>
+      <div class="footer-block">
+        <h4>Contacto</h4>
+        <p>📞 +506 2222-3333</p>
+        <p>📱 +506 8888-9999</p>
+        <p>✉️ contacto@dalimedica.com</p>
       </div>
     </div>
+    <div class="footer-copy">
+      <p>&copy; 2026 Dali Medica</p>
+    </div>
   </footer>
+  <script src="../../Pagina-JS/site-header.js"></script>
 
-  <script src="../../Pagina-JS/storage.js"></script>
-  <script src="../../Pagina-JS/Auth.js"></script>
   <script>
+    const USUARIOS_KEY = 'usuariosDaliMedica';
+
+    function cargarUsuarios() {
+      return JSON.parse(localStorage.getItem(USUARIOS_KEY)) || [];
+    }
+
+    function guardarUsuarios(usuarios) {
+      localStorage.setItem(USUARIOS_KEY, JSON.stringify(usuarios));
+    }
+
+    function mostrarMensaje(texto, tipo) {
+      const msg = document.getElementById('msg');
+      msg.style.display = 'block';
+      msg.style.color = tipo === 'error' ? '#ef4444' : '#00c7fd';
+      msg.textContent = texto;
+    }
+
     document.getElementById('togglePassword').addEventListener('click', function() {
       const input = document.getElementById('password');
       input.type = input.type === 'password' ? 'text' : 'password';
+    });
+
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const usuario = document.getElementById('usuario').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const msg = document.getElementById('msg');
+
+      if (!usuario || !password) {
+        mostrarMensaje('Por favor, completa todos los campos.', 'error');
+        return;
+      }
+
+      const usuariosRegistrados = cargarUsuarios();
+      const usuarioExiste = usuariosRegistrados.some(u => u.usuario === usuario || (u.email && u.email === usuario));
+
+      if (usuarioExiste) {
+        mostrarMensaje('¡Error! Este usuario o correo ya está registrado.', 'error');
+        return;
+      }
+
+      const nuevoUsuario = {
+        usuario,
+        email: usuario.includes('@') ? usuario : '',
+        password,
+        rol: 'cliente',
+        nombre: usuario
+      };
+
+      usuariosRegistrados.push(nuevoUsuario);
+      guardarUsuarios(usuariosRegistrados);
+
+      mostrarMensaje('¡Usuario creado exitosamente! Ahora inicia sesión.', 'success');
+      document.getElementById('usuario').value = '';
+      document.getElementById('password').value = '';
     });
   </script>
 </body>
