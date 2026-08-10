@@ -47,12 +47,14 @@
       <textarea id="providerNotes" rows="3"></textarea>
       <button type="submit">Guardar proveedor</button>
     </form>
+    <input id="searchProvider" type="search" placeholder="Buscar proveedor">
     <table>
       <thead>
         <tr><th>Empresa</th><th>Contacto</th><th>Correo</th><th>Teléfono</th><th>Notas</th><th>Acciones</th></tr>
       </thead>
       <tbody id="providerList"></tbody>
     </table>
+    <div id="paginationControls"></div>
   </main>
   <footer style="margin-top:40px;padding:24px 20px;background:#eef6ff;border-top:1px solid #dce9f8;color:#555;">
     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:flex-start;max-width:1200px;margin:0 auto;">
@@ -76,74 +78,6 @@
   </footer>
   <script src="../../Pagina-JS/storage.js"></script>
   <script src="../../Pagina-JS/auth.js"></script>
-  <script>
-    verificarSesion();
-    const providerForm = document.getElementById('providerForm');
-    const providerList = document.getElementById('providerList');
-    let providers = JSON.parse(localStorage.getItem('dali_providers')||'[]');
-    let editingId = null;
-
-    function saveProviders(){
-      localStorage.setItem('dali_providers', JSON.stringify(providers));
-    }
-
-    function renderProviders(){
-      providerList.innerHTML = '';
-      providers.forEach((provider,index)=>{
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${provider.name}</td>
-          <td>${provider.contact}</td>
-          <td>${provider.email}</td>
-          <td>${provider.phone}</td>
-          <td>${provider.notes}</td>
-          <td class="actions">
-            <button type="button" onclick="editProvider(${index})">Editar</button>
-            <button type="button" onclick="deleteProvider(${index})">Eliminar</button>
-          </td>
-        `;
-        providerList.appendChild(row);
-      });
-    }
-
-    function editProvider(index){
-      const provider = providers[index];
-      editingId = index;
-      document.getElementById('providerId').value = index;
-      document.getElementById('providerName').value = provider.name;
-      document.getElementById('providerContact').value = provider.contact;
-      document.getElementById('providerEmail').value = provider.email;
-      document.getElementById('providerPhone').value = provider.phone;
-      document.getElementById('providerNotes').value = provider.notes;
-    }
-
-    function deleteProvider(index){
-      providers.splice(index,1);
-      saveProviders();
-      renderProviders();
-    }
-
-    providerForm.addEventListener('submit', function(e){
-      e.preventDefault();
-      const provider = {
-        name: document.getElementById('providerName').value.trim(),
-        contact: document.getElementById('providerContact').value.trim(),
-        email: document.getElementById('providerEmail').value.trim(),
-        phone: document.getElementById('providerPhone').value.trim(),
-        notes: document.getElementById('providerNotes').value.trim(),
-      };
-      if(editingId !== null){
-        providers[editingId] = provider;
-      } else {
-        providers.push(provider);
-      }
-      saveProviders();
-      renderProviders();
-      providerForm.reset();
-      editingId = null;
-    });
-
-    renderProviders();
-  </script>
+  <script src="../../Pagina-JS/proveedores.js"></script>
 </body>
 </html>
