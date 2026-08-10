@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Productos - Dali Medica</title>
-  <link rel="stylesheet" href="../Pagina-css/estilos.css">
+  <link rel="stylesheet" href="Pagina-css/estilos.css">
 </head>
 <body>
   <header>
@@ -19,6 +19,7 @@
       </ul>
     </nav>
   </header>
+
   <main class="container">
     <section class="intro">
       <h1>Catálogo de productos médicos</h1>
@@ -45,14 +46,14 @@
           <p>Fácil de usar en espacios reducidos.</p>
           <button onclick="addToCart(this)">Agregar al carrito</button>
         </article>
-        <article class="item locked" data-id="medX" data-name="Medicamento X" data-price="18000" data-locked="true">
-          <h3>Medicamento X</h3>
+        <article class="item locked" data-id="medX" data-name="Zolgensma (Onasemnogene abeparvovec)" data-price="18000" data-locked="true">
+          <h3>Zolgensma (Onasemnogene abeparvovec)</h3>
           <p>Precio: ₡18.000</p>
           <p>Necesita receta médica.</p>
           <button onclick="selectRecipe(this)">Subir receta</button>
         </article>
-        <article class="item locked" data-id="medY" data-name="Medicamento Y" data-price="27000" data-locked="true">
-          <h3>Medicamento Y</h3>
+        <article class="item locked" data-id="medY" data-name="Prialt (Ziconotida)" data-price="27000" data-locked="true">
+          <h3>Prialt (Ziconotida)</h3>
           <p>Precio: ₡27.000</p>
           <p>Necesita receta médica.</p>
           <button onclick="selectRecipe(this)">Subir receta</button>
@@ -83,7 +84,7 @@
         </div>
         <button class="checkout" onclick="checkout()">Pagar ahora</button>
         <p id="cartMessage" class="message"></p>
-        <div class="upload-area" id="uploadArea">
+        <div class="upload-area" id="uploadArea" style="display:none;">
           <h2 id="uploadTitle">Subir receta</h2>
           <p>Selecciona un archivo PDF o toma una foto desde la cámara.</p>
           <input id="recipeFile" type="file" accept="image/*,.pdf" capture="environment">
@@ -142,7 +143,7 @@
           total += item.price;
           const li = document.createElement('li');
           li.className = 'cart-row';
-          li.innerHTML = `<span>${item.name}</span><span>${formatPrice(item.price)} <button onclick="removeFromCart(${index})" class="remove-btn">Eliminar</button></span>`;
+          li.innerHTML = `<span>${item.name}</span><span>${formatPrice(item.price)} <button onclick="removeFromCart(${index})" class="remove-btn" style="background:#dc2626;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;">Eliminar</button></span>`;
           cartItems.appendChild(li);
         });
       }
@@ -237,7 +238,6 @@
       }
       cartMessage.style.color = 'green';
       cartMessage.textContent = 'Compra preparada. Método de pago: ' + selectedPayment.value + '.';
-      // Simulación de pago: limpiar carrito
       cart.length = 0;
       saveCart();
       renderCart();

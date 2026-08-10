@@ -3,22 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="../Pagina_privada-css/estilos.css">
   <title>Clientes - Dali Medica</title>
-  <style>body{font-family:Arial,Helvetica,sans-serif;margin:0}.container{padding:24px}header{display:flex;justify-content:space-between;padding:12px 20px;background:#eef6ff}.logo{font-weight:700;color:#1a73e8}table{width:100%;border-collapse:collapse}th,td{padding:8px;border:1px solid #ddd}</style>
+  <link rel="stylesheet" href="Pagina_privada-css/estilos.css">
 </head>
 <body>
   <header>
     <div class="logo">dali medica - privado</div>
     <nav>
-      <ul style="list-style:none;display:flex;margin:0;padding:0;">
+      <ul>
         <li><a href="dashboard.html">Volver</a></li>
       </ul>
     </nav>
   </header>
+
   <main class="container">
     <h1>Clientes</h1>
     <p>Registra y administra clientes desde este formulario.</p>
+
     <form id="clientForm">
       <input type="hidden" id="clientId">
       <label for="clientName">Nombre</label>
@@ -31,37 +32,42 @@
       <textarea id="clientNotes" rows="3"></textarea>
       <button type="submit">Guardar cliente</button>
     </form>
+
     <input id="searchClient" type="search" placeholder="Buscar cliente">
+
     <table>
       <thead>
         <tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Notas</th><th>Acciones</th></tr>
       </thead>
       <tbody id="clientList"></tbody>
     </table>
+
     <div id="paginationControls"></div>
   </main>
-  <footer style="margin-top:40px;padding:24px 20px;background:#eef6ff;border-top:1px solid #dce9f8;color:#555;">
-    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:flex-start;max-width:1200px;margin:0 auto;">
-      <div style="flex:1;min-width:260px;padding-left:8px;">
-        <h3 style="margin:0 0 10px;color:#1a73e8;">Suscríbete a noticias</h3>
-        <p style="margin:0 0 10px;">Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-block">
+        <h3>Suscríbete a noticias</h3>
+        <p>Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
         <form>
-          <label for="newsletter-email-clientes" style="display:block;margin-bottom:6px;font-weight:600;">Correo electrónico</label>
-          <input id="newsletter-email-clientes" type="email" placeholder="Tu correo" required style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;">
-          <button type="submit" style="margin-top:8px;padding:8px 12px;border:none;border-radius:6px;background:#1a73e8;color:#fff;cursor:pointer;">Registrarme</button>
+          <label for="newsletter-email-clientes">Correo electrónico</label>
+          <input id="newsletter-email-clientes" type="email" placeholder="Tu correo" required>
+          <button type="submit">Registrarme</button>
         </form>
       </div>
-      <div style="flex:1;min-width:260px;">
-        <h3 style="margin:0 0 10px;color:#1a73e8;">Contáctanos</h3>
-        <p style="margin:0 0 6px;"><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
-        <p style="margin:0 0 6px;"><strong>Correo:</strong> contacto@dalimedica.com</p>
-        <p style="margin:0;">Centro Médico Dali Medica · San José, Costa Rica</p>
+      <div class="footer-block">
+        <h3>Contáctanos</h3>
+        <p><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
+        <p><strong>Correo:</strong> contacto@dalimedica.com</p>
+        <p>Centro Médico Dali Medica · San José, Costa Rica</p>
       </div>
     </div>
-    <p style="text-align:center;margin:16px 0 0;padding-top:12px;border-top:1px solid #dce9f8;">&copy; 2026 Dali Medica — Área privada</p>
+    <p class="footer-copy">&copy; 2026 Dali Medica — Área privada</p>
   </footer>
+
   <script src="../../Pagina-JS/storage.js"></script>
-  <script src="../../Pagina-JS/auth.js"></script>
+  <script src="../../Pagina-JS/Auth.js"></script>
   <script src="../../Pagina-JS/clientes.js"></script>
 </body>
 </html>

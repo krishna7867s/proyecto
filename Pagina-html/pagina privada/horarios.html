@@ -3,45 +3,167 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="../Pagina_privada-css/estilos.css">
-  <title>Horarios  Dali Medica</title>
-  <style>body{font-family:Arial,Helvetica,sans-serif;margin:0}.container{padding:24px}header{display:flex;justify-content:space-between;padding:12px 20px;background:#eef6ff}.logo{font-weight:700;color:#1a73e8}</style>
+  <title>Horarios - Dali Medica</title>
+  <link rel="stylesheet" href="Pagina_privada-css/estilos.css">
 </head>
 <body>
   <header>
     <div class="logo">dali medica - privado</div>
     <nav>
-      <ul style="list-style:none;display:flex;margin:0;padding:0;">
+      <ul>
         <li><a href="dashboard.html">Volver</a></li>
       </ul>
     </nav>
   </header>
+
   <main class="container">
-    <h1>Horarios</h1>
-    <p>Administrador de horarios (placeholder).</p>
+    <h1>Horarios de atención</h1>
+    <p>Gestiona los horarios de apertura y cierre de la clínica.</p>
+
+    <form id="scheduleForm">
+      <input type="hidden" id="scheduleId">
+      
+      <label for="scheduleDay">Día</label>
+      <select id="scheduleDay" required>
+        <option value="Lunes">Lunes</option>
+        <option value="Martes">Martes</option>
+        <option value="Miércoles">Miércoles</option>
+        <option value="Jueves">Jueves</option>
+        <option value="Viernes">Viernes</option>
+        <option value="Sábado">Sábado</option>
+        <option value="Domingo">Domingo</option>
+      </select>
+
+      <label for="scheduleOpen">Hora apertura</label>
+      <input id="scheduleOpen" type="time" required>
+
+      <label for="scheduleClose">Hora cierre</label>
+      <input id="scheduleClose" type="time" required>
+
+      <label for="scheduleStatus">Estado</label>
+      <select id="scheduleStatus">
+        <option value="Abierto">Abierto</option>
+        <option value="Cerrado">Cerrado</option>
+        <option value="Medio día">Medio día</option>
+      </select>
+
+      <button type="submit">Guardar horario</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr><th>Día</th><th>Apertura</th><th>Cierre</th><th>Estado</th><th>Acciones</th></tr>
+      </thead>
+      <tbody id="scheduleList"></tbody>
+    </table>
   </main>
-  <footer style="margin-top:40px;padding:24px 20px;background:#eef6ff;border-top:1px solid #dce9f8;color:#555;">
-    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:flex-start;max-width:1200px;margin:0 auto;">
-      <div style="flex:1;min-width:260px;padding-left:8px;">
-        <h3 style="margin:0 0 10px;color:#1a73e8;">Suscríbete a noticias</h3>
-        <p style="margin:0 0 10px;">Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-block">
+        <h3>Suscríbete a noticias</h3>
+        <p>Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
         <form>
-          <label for="newsletter-email-horarios" style="display:block;margin-bottom:6px;font-weight:600;">Correo electrónico</label>
-          <input id="newsletter-email-horarios" type="email" placeholder="Tu correo" required style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;">
-          <button type="submit" style="margin-top:8px;padding:8px 12px;border:none;border-radius:6px;background:#1a73e8;color:#fff;cursor:pointer;">Registrarme</button>
+          <label for="newsletter-email-horarios">Correo electrónico</label>
+          <input id="newsletter-email-horarios" type="email" placeholder="Tu correo" required>
+          <button type="submit">Registrarme</button>
         </form>
       </div>
-      <div style="flex:1;min-width:260px;">
-        <h3 style="margin:0 0 10px;color:#1a73e8;">Contáctanos</h3>
-        <p style="margin:0 0 6px;"><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
-        <p style="margin:0 0 6px;"><strong>Correo:</strong> contacto@dalimedica.com</p>
-        <p style="margin:0;">Centro Médico Dali Medica · San José, Costa Rica</p>
+      <div class="footer-block">
+        <h3>Contáctanos</h3>
+        <p><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
+        <p><strong>Correo:</strong> contacto@dalimedica.com</p>
+        <p>Centro Médico Dali Medica · San José, Costa Rica</p>
       </div>
     </div>
-    <p style="text-align:center;margin:16px 0 0;padding-top:12px;border-top:1px solid #dce9f8;">&copy; 2026 Dali Medica — Área privada</p>
+    <p class="footer-copy">&copy; 2026 Dali Medica — Área privada</p>
   </footer>
+
   <script src="../../Pagina-JS/storage.js"></script>
-  <script src="../../Pagina-JS/auth.js"></script>
-  <script>verificarSesion();</script>
+  <script src="../../Pagina-JS/Auth.js"></script>
+  <script>
+    verificarSesion(['admin', 'empleado']);
+
+    const scheduleForm = document.getElementById('scheduleForm');
+    const scheduleList = document.getElementById('scheduleList');
+    let schedules = JSON.parse(localStorage.getItem('dali_schedules') || '[]');
+    let editingId = null;
+
+    function saveSchedules() {
+      localStorage.setItem('dali_schedules', JSON.stringify(schedules));
+    }
+
+    function renderSchedules() {
+      scheduleList.innerHTML = '';
+      if (schedules.length === 0) {
+        scheduleList.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#94a3b8;">No hay horarios registrados.</td></tr>';
+        return;
+      }
+      schedules.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.day}</td>
+          <td>${item.open}</td>
+          <td>${item.close}</td>
+          <td>${item.status}</td>
+          <td class="actions">
+            <button onclick="editSchedule('${item.id || index}')">Editar</button>
+            <button onclick="deleteSchedule('${item.id || index}')">Eliminar</button>
+          </td>
+        `;
+        scheduleList.appendChild(row);
+      });
+    }
+
+    function editSchedule(id) {
+      const index = schedules.findIndex(s => s.id === id || String(s.id) === String(id));
+      if (index === -1) return;
+      const item = schedules[index];
+      editingId = id;
+      document.getElementById('scheduleId').value = id;
+      document.getElementById('scheduleDay').value = item.day;
+      document.getElementById('scheduleOpen').value = item.open;
+      document.getElementById('scheduleClose').value = item.close;
+      document.getElementById('scheduleStatus').value = item.status;
+    }
+
+    function deleteSchedule(id) {
+      if (!confirm('¿Eliminar este horario?')) return;
+      const index = schedules.findIndex(s => s.id === id || String(s.id) === String(id));
+      if (index !== -1) {
+        schedules.splice(index, 1);
+        saveSchedules();
+        renderSchedules();
+      }
+    }
+
+    scheduleForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const schedule = {
+        day: document.getElementById('scheduleDay').value,
+        open: document.getElementById('scheduleOpen').value,
+        close: document.getElementById('scheduleClose').value,
+        status: document.getElementById('scheduleStatus').value,
+      };
+
+      if (editingId) {
+        const index = schedules.findIndex(s => s.id === editingId || String(s.id) === String(editingId));
+        if (index !== -1) {
+          schedules[index] = { ...schedules[index], ...schedule };
+        }
+      } else {
+        schedule.id = Date.now().toString();
+        schedules.push(schedule);
+      }
+
+      saveSchedules();
+      renderSchedules();
+      scheduleForm.reset();
+      editingId = null;
+      document.getElementById('scheduleId').value = '';
+    });
+
+    renderSchedules();
+  </script>
 </body>
 </html>
