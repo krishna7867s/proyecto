@@ -828,3 +828,207 @@ footer {
     text-align: center;
   }
 }
+
+/* ===== FOOTER PREMIUM ===== */
+footer {
+  background: linear-gradient(180deg, rgba(3, 7, 18, 0.98) 0%, #030712 100%);
+  border-top: 1px solid rgba(0, 199, 253, 0.15);
+  padding: 4rem 6% 1.5rem;
+  margin-top: 4rem;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr;
+  gap: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Columna 1 - Logo y descripción */
+.footer-col:first-child h3 {
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-transform: lowercase;
+  letter-spacing: 1.5px;
+  background: linear-gradient(135deg, #0068b5 0%, #00c7fd 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.8rem;
+}
+
+.footer-col:first-child p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-width: 320px;
+  -webkit-text-fill-color: #94a3b8;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.footer-socials a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.footer-socials a:hover {
+  background: rgba(0, 199, 253, 0.15);
+  border-color: rgba(0, 199, 253, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 199, 253, 0.15);
+}
+
+/* Columnas de enlaces */
+.footer-col h4 {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 1rem;
+  -webkit-text-fill-color: #ffffff;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-col ul li {
+  margin-bottom: 0.6rem;
+}
+
+.footer-col ul a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  -webkit-text-fill-color: #94a3b8;
+}
+
+.footer-col ul a:hover {
+  color: #00c7fd;
+  padding-left: 4px;
+  -webkit-text-fill-color: #00c7fd;
+}
+
+/* Contacto */
+.footer-col p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.8;
+  margin: 0;
+  -webkit-text-fill-color: #94a3b8;
+}
+
+/* Suscripción */
+.footer-col form {
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.footer-col form input {
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.footer-col form input:focus {
+  outline: none;
+  border-color: #00c7fd;
+  box-shadow: 0 0 20px rgba(0, 199, 253, 0.1);
+}
+
+.footer-col form input::placeholder {
+  color: #64748b;
+}
+
+.footer-col form button {
+  padding: 0.7rem 1rem;
+  background: linear-gradient(135deg, #0068b5 0%, #00c7fd 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin: 0;
+  box-shadow: 0 4px 15px rgba(0, 104, 181, 0.3);
+}
+
+.footer-col form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 199, 253, 0.3);
+}
+
+/* Footer bottom */
+.footer-bottom {
+  text-align: center;
+  padding-top: 1.5rem;
+}
+
+.footer-bottom p {
+  color: #475569;
+  font-size: 0.85rem;
+  margin: 0;
+  -webkit-text-fill-color: #475569;
+}
+
+.footer-bottom p span {
+  color: #00c7fd;
+  -webkit-text-fill-color: #00c7fd;
+}
+
+/* ===== RESPONSIVE FOOTER ===== */
+@media (max-width: 850px) {
+  .footer-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+  }
+  .footer-col:first-child p {
+    max-width: 100%;
+  }
+  .footer-socials {
+    justify-content: center;
+  }
+}

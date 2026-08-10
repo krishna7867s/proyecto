@@ -17,7 +17,7 @@ const USUARIOS_SEMILLA = [
  * Llamar una sola vez al cargar login.html.
  */
 function inicializarUsuarios() {
-  const usuarios = getData('usuarios'); // Usa storage.js automáticamente transforma a dm_usuarios
+  const usuarios = getData('usuarios');
   if (usuarios.length === 0) {
     saveData('usuarios', USUARIOS_SEMILLA);
   }
@@ -90,12 +90,8 @@ function cerrarSesion() {
     // Eliminar sesión actual sobrescribiendo con nulo
     saveData('sesion', null);
     
-    // Redirigir a login (dependiendo de dónde estemos parados)
-    if (window.location.pathname.includes('pagina privada')) {
-        window.location.href = "../pagina publica/login.html";
-    } else {
-        window.location.href = "login.html";
-    }
+    // Redirigir a login usando ruta absoluta desde la raíz del proyecto
+    window.location.href = '/Pagina-html/pagina publica/login.html';
 }
 
 // ---------------------------------------------------------
@@ -124,11 +120,7 @@ function verificarSesion(rolesPermitidos = []) {
   
   // 1. Si no hay sesión, lo devolvemos al login
   if (!sesion) {
-    if (window.location.pathname.includes('pagina privada')) {
-        window.location.href = "../pagina publica/login.html";
-    } else {
-        window.location.href = "login.html";
-    }
+    window.location.href = '/Pagina-html/pagina publica/login.html';
     return null;
   }
 
@@ -137,9 +129,9 @@ function verificarSesion(rolesPermitidos = []) {
       alert("Acceso denegado: No tienes permisos para ver esta página.");
       // Redirigir a su lugar correspondiente
       if (sesion.rol === 'cliente') {
-          window.location.href = "../pagina publica/productos.html";
+          window.location.href = '/Pagina-html/pagina publica/productos.html';
       } else {
-          window.location.href = "../pagina privada/dashboard.html";
+          window.location.href = '/Pagina-html/pagina privada/dashboard.html';
       }
       return null;
   }
@@ -183,9 +175,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (resultado.ok) {
           // Redirección Inteligente basada en roles
           if (resultado.rol === 'cliente') {
-              window.location.href = "productos.html"; // Asume que login.html y productos.html están en publica
+              window.location.href = "/Pagina-html/pagina publica/productos.html";
           } else {
-              window.location.href = "../pagina privada/dashboard.html";
+              window.location.href = "/Pagina-html/pagina privada/dashboard.html";
           }
         } else {
           mensajeError.textContent = resultado.mensaje;
@@ -229,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mensaje.style.color = "green";
         mensaje.textContent = "Usuario creado. Redirigiendo al login...";
         setTimeout(() => {
-          window.location.href = "login.html";
+          window.location.href = "/Pagina-html/pagina publica/login.html";
         }, 800);
       });
   }
