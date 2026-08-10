@@ -1,40 +1,25 @@
 /**
- * auth.js — Módulo de autenticación y manejo de sesión
+ * Auth.js — Módulo de autenticación, manejo de sesión y seguridad (RBAC)
  * Sistema Administrativo Web · Dali Medica
  *
- * Usa el prefijo "dali_" para ser consistente con las claves ya usadas
- * en el proyecto (dali_user, dali_products, dali_providers, dali_cart).
- *
- * Claves de LocalStorage que maneja este archivo:
- *   dali_usuarios -> lista de usuarios válidos para hacer login
- *   dali_sesion   -> sesión activa (quién está logueado ahora)
- *
- * Nota: dali_user (singular, sin "s") es la que usa crear_usuario.html
- * para el registro rápido. dali_sesion es la nueva clave para el login
- * real con validación de usuario/contraseña que pide el enunciado.
+ * NOTA IMPORTANTE: Este archivo depende de storage.js
+ * Asegúrate de importar storage.js antes de Auth.js en tus HTML.
  */
-
-// ---------------------------------------------------------
-// 1. Configuración y usuarios semilla
-// ---------------------------------------------------------
-
-const SESION_KEY = "dali_sesion";
-const USUARIOS_KEY = "dali_usuarios";
 
 // Usuarios de prueba: se crean solo la primera vez que corre el sistema
 const USUARIOS_SEMILLA = [
   { usuario: "admin", email: "admin@dalimedica.cr", password: "admin123", nombre: "Administrador", rol: "admin" },
-  { usuario: "operador", email: "operador@dalimedica.cr", password: "operador123", nombre: "Operador", rol: "operador" },
+  { usuario: "operador", email: "operador@dalimedica.cr", password: "operador123", nombre: "Operador", rol: "empleado" },
 ];
 
 /**
- * Crea los usuarios semilla en LocalStorage si aún no existen.
+ * Crea los usuarios semilla si aún no existen.
  * Llamar una sola vez al cargar login.html.
  */
 function inicializarUsuarios() {
-  const usuarios = JSON.parse(localStorage.getItem(USUARIOS_KEY) || "null");
-  if (!usuarios || usuarios.length === 0) {
-    localStorage.setItem(USUARIOS_KEY, JSON.stringify(USUARIOS_SEMILLA));
+  const usuarios = getData('usuarios'); // Usa storage.js automáticamente transforma a dm_usuarios
+  if (usuarios.length === 0) {
+    saveData('usuarios', USUARIOS_SEMILLA);
   }
 }
 
@@ -46,12 +31,12 @@ function inicializarUsuarios() {
  * Valida credenciales contra los usuarios guardados.
  * @param {string} usuario
  * @param {string} password
- * @returns {{ok: boolean, mensaje?: string}}
+ * @returns {{ok: boolean, mensaje?: string, rol?: string}}
  */
 function iniciarSesion(usuario, password) {
-  const usuarios = JSON.parse(localStorage.getItem(USUARIOS_KEY) || "[]");
-
+  const usuarios = getData('usuarios');
   const credencial = usuario.trim();
+  
   const encontrado = usuarios.find(
     (u) => (u.usuario === credencial || u.email === credencial) && u.password === password
   );
@@ -67,48 +52,103 @@ function iniciarSesion(usuario, password) {
     inicio: new Date().toISOString(),
   };
 
-  localStorage.setItem(SESION_KEY, JSON.stringify(sesion));
-  return { ok: true };
+  // Guardamos la sesión activa usando storage.js
+  saveData('sesion', sesion);
+  
+  // Plus: Guardamos un registro de asistencia si es un empleado/admin
+  if(encontrado.rol === 'empleado' || encontrado.rol === 'admin') {
+      addItem('asistencia', {
+          usuario: encontrado.usuario,
+          nombre: encontrado.nombre,
+          rol: encontrado.rol,
+          estado: 'Online',
+          hora_entrada: new Date().toLocaleString()
+      });
+  }
+
+  return { ok: true, rol: encontrado.rol };
 }
 
 /**
  * Cierra la sesión activa y redirige al login.
  */
 function cerrarSesion() {
-  localStorage.removeItem(SESION_KEY);
-  // Se llama desde pagina privada/ → login está un nivel arriba en pagina publica/
-  window.location.href = "../pagina publica/login.html";
+    const sesion = obtenerSesion();
+    
+    // Registrar salida si es empleado/admin
+    if (sesion && (sesion.rol === 'empleado' || sesion.rol === 'admin')) {
+        const asistencias = getData('asistencia');
+        // Buscar el último registro Online de este usuario y ponerlo Offline
+        const ultimaAsistencia = asistencias.slice().reverse().find(a => a.usuario === sesion.usuario && a.estado === 'Online');
+        if(ultimaAsistencia) {
+            ultimaAsistencia.estado = 'Offline';
+            ultimaAsistencia.hora_salida = new Date().toLocaleString();
+            updateItem('asistencia', ultimaAsistencia.id, ultimaAsistencia);
+        }
+    }
+    
+    // Eliminar sesión actual sobrescribiendo con nulo
+    saveData('sesion', null);
+    
+    // Redirigir a login (dependiendo de dónde estemos parados)
+    if (window.location.pathname.includes('pagina privada')) {
+        window.location.href = "../pagina publica/login.html";
+    } else {
+        window.location.href = "login.html";
+    }
 }
 
 // ---------------------------------------------------------
-// 3. Verificación de sesión (usar en dashboard, clientes, productos-admin, proveedores)
+// 3. Verificación de sesión (Control de Acceso por Roles - RBAC)
 // ---------------------------------------------------------
 
 /**
  * Devuelve el objeto de sesión activa, o null si no hay sesión.
  */
 function obtenerSesion() {
-  const data = localStorage.getItem(SESION_KEY);
-  return data ? JSON.parse(data) : null;
+  const data = getData('sesion');
+  // getData devuelve [] si está vacío, verificamos si es un objeto con la propiedad usuario
+  if (data && data.usuario) {
+      return data;
+  }
+  return null;
 }
 
 /**
- * Protege una página: si no hay sesión activa, redirige al login.
- * Llamar al inicio de cada página privada.
+ * Protege una página: verifica si hay sesión y si el rol está permitido.
+ * @param {Array} rolesPermitidos - Ej: ['admin', 'empleado']. Si está vacío, solo exige estar logueado.
+ * @returns {Object|null} - Retorna la sesión o redirige y retorna null.
  */
-function verificarSesion() {
+function verificarSesion(rolesPermitidos = []) {
   const sesion = obtenerSesion();
+  
+  // 1. Si no hay sesión, lo devolvemos al login
   if (!sesion) {
-    // Se llama desde pagina privada/ → login está un nivel arriba en pagina publica/
-    window.location.href = "../pagina publica/login.html";
+    if (window.location.pathname.includes('pagina privada')) {
+        window.location.href = "../pagina publica/login.html";
+    } else {
+        window.location.href = "login.html";
+    }
     return null;
   }
+
+  // 2. Si hay roles especificados, verificar si el usuario tiene permiso
+  if (rolesPermitidos.length > 0 && !rolesPermitidos.includes(sesion.rol)) {
+      alert("Acceso denegado: No tienes permisos para ver esta página.");
+      // Redirigir a su lugar correspondiente
+      if (sesion.rol === 'cliente') {
+          window.location.href = "../pagina publica/productos.html";
+      } else {
+          window.location.href = "../pagina privada/dashboard.html";
+      }
+      return null;
+  }
+
   return sesion;
 }
 
 /**
- * Pinta el nombre del usuario logueado en cualquier elemento del header
- * que tenga el id "nombreUsuario".
+ * Pinta el nombre del usuario logueado en el header (id "nombreUsuario").
  */
 function mostrarInfoUsuario() {
   const sesion = obtenerSesion();
@@ -119,87 +159,78 @@ function mostrarInfoUsuario() {
 }
 
 // ---------------------------------------------------------
-// 4. Manejo del formulario de login (solo aplica en login.html)
+// 4. Manejo de Formularios Automático
 // ---------------------------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Inicializamos usuarios siempre (para que admin y operador existan)
   inicializarUsuarios();
+  
+  // Mostrar el nombre del usuario si está en una página con ese elemento
+  mostrarInfoUsuario();
 
+  // --- Lógica de Login ---
   const formLogin = document.getElementById("formLogin");
-  if (!formLogin) return; // no estamos en login.html, no hacer nada más
+  if (formLogin) {
+      const inputUsuario = document.getElementById("usuario");
+      const inputPassword = document.getElementById("password");
+      const mensajeError = document.getElementById("mensajeError");
 
-  const inputUsuario = document.getElementById("usuario");
-  const inputPassword = document.getElementById("password");
-  const mensajeError = document.getElementById("mensajeError");
+      formLogin.addEventListener("submit", (evento) => {
+        evento.preventDefault();
+        const resultado = iniciarSesion(inputUsuario.value, inputPassword.value);
 
-  formLogin.addEventListener("submit", (evento) => {
-    evento.preventDefault();
+        if (resultado.ok) {
+          // Redirección Inteligente basada en roles
+          if (resultado.rol === 'cliente') {
+              window.location.href = "productos.html"; // Asume que login.html y productos.html están en publica
+          } else {
+              window.location.href = "../pagina privada/dashboard.html";
+          }
+        } else {
+          mensajeError.textContent = resultado.mensaje;
+          mensajeError.style.display = "block";
+        }
+      });
+  }
 
-    const resultado = iniciarSesion(inputUsuario.value, inputPassword.value);
-
-    if (resultado.ok) {
-      // login.html está en pagina publica/ → dashboard está en pagina privada/
-      window.location.href = "../pagina privada/dashboard.html";
-    } else {
-      mensajeError.textContent = resultado.mensaje;
-      mensajeError.style.display = "block";
-    }
-  });
-});
-
-// ---------------------------------------------------------
-// 5. Registro de usuarios nuevos (solo aplica en crear_usuario.html)
-// ---------------------------------------------------------
-
-/**
- * Registra un usuario nuevo en la lista dali_usuarios, para que después
- * pueda iniciar sesión desde login.html.
- * Se conecta automáticamente al formulario id="signup" de crear_usuario.html
- * (inputs id="email", id="password"; mensaje en id="msg").
- */
-function inicializarRegistro() {
-  inicializarUsuarios();
-
+  // --- Lógica de Registro (Signup) ---
   const formSignup = document.getElementById("signup");
-  if (!formSignup) return; // no estamos en crear_usuario.html, no hacer nada más
+  if (formSignup) {
+      const inputUsuario = document.getElementById("usuario");
+      const inputPassword = document.getElementById("password");
+      const mensaje = document.getElementById("msg");
 
-  const inputUsuario = document.getElementById("usuario");
-  const inputPassword = document.getElementById("password");
-  const mensaje = document.getElementById("msg");
+      formSignup.addEventListener("submit", (evento) => {
+        evento.preventDefault();
+        const identificador = inputUsuario.value.trim();
+        const password = inputPassword.value;
 
-  formSignup.addEventListener("submit", (evento) => {
-    evento.preventDefault();
+        if (!identificador || !password) return;
 
-    const identificador = inputUsuario.value.trim();
-    const password = inputPassword.value;
+        const usuarios = getData('usuarios');
+        const yaExiste = usuarios.some(u => u.usuario === identificador || u.email === identificador);
+        
+        if (yaExiste) {
+          mensaje.style.color = "#c00";
+          mensaje.textContent = "Ese usuario o correo ya existe. Intenta iniciar sesión.";
+          return;
+        }
 
-    if (!identificador || !password) return;
+        // Usamos addItem de storage.js que también genera un ID automático
+        addItem('usuarios', {
+          usuario: identificador,
+          email: identificador.includes("@") ? identificador : "",
+          password: password,
+          nombre: identificador,
+          rol: "cliente" // Todo auto-registro es cliente por defecto
+        });
 
-    const usuarios = JSON.parse(localStorage.getItem(USUARIOS_KEY) || "[]");
-
-    const yaExiste = usuarios.some(
-      (u) => u.usuario === identificador || u.email === identificador
-    );
-    if (yaExiste) {
-      mensaje.style.color = "#c00";
-      mensaje.textContent = "Ese usuario o correo ya existe. Intenta iniciar sesión.";
-      return;
-    }
-
-    usuarios.push({
-      usuario: identificador,
-      email: identificador.includes("@") ? identificador : "",
-      password: password,
-      nombre: identificador,
-      rol: "cliente",
-    });
-    localStorage.setItem(USUARIOS_KEY, JSON.stringify(usuarios));
-
-    mensaje.style.color = "green";
-    mensaje.textContent = "Usuario creado. Redirigiendo al login...";
-    setTimeout(() => {
-      // crear_usuario.html está en pagina publica/ → login.html también está ahí
-      window.location.href = "login.html";
-    }, 800);
-  });
-}
+        mensaje.style.color = "green";
+        mensaje.textContent = "Usuario creado. Redirigiendo al login...";
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 800);
+      });
+  }
+});
