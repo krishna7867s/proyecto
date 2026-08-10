@@ -529,3 +529,56 @@ main.container > section > p[style*="max-width:860px"]:first-of-type:hover::afte
   background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlRZt9ZBn0nhXAHHzp7vwSPgVGPYlJdVuUlLrdffh3_63AnrxTH8mT9pN7&s=10") !important;
 }
 
+/* Contenedor principal del Footer */
+.footer-block {
+  background-color: #121212; /* Fondo oscuro elegante */
+  color: #e0e0e0;
+  padding: 50px 0 20px 0;
+  border-top: 1px solid #2a2a2a;
+}
+
+/* Distribución de secciones dentro del Footer */
+.footer-block .grid {
+  align-items: start;
+  margin-bottom: 30px;
+}
+
+/* Estilos para encabezados dentro del Footer */
+.footer-block h3,
+.footer-block h4 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Listas de enlaces e información en el Footer */
+.footer-block .list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 10px;
+}
+
+.footer-block a {
+  color: #a0a0a0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.footer-block a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Ajustes del copyright */
+.footer-copy {
+  border-top: 1px solid #2a2a2a;
+  padding-top: 20px;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #888888;
+}

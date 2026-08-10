@@ -1,11 +1,32 @@
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sobre Nosotros - Dali Medica</title>
-   <link rel="stylesheet" href="../pagina-css/estilos.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Nosotros - Dali Medica</title>
+  <style>body{font-family:Arial,Helvetica,sans-serif;margin:0}header{display:flex;justify-content:space-between;padding:12px 20px;background:#f7f7f7}.logo{font-weight:700;color:#1a73e8}nav a{margin-left:16px;text-decoration:none;color:#333}.container{padding:24px}</style>
+</head>
+<link rel="stylesheet" href="../Pagina-CSS/estilos.css">
+
+<body>
+
+  </main>
+
+  <header>
+    <div class="logo">dali medica</div>
+    <nav>
+      <ul style="list-style:none;display:flex;gap:16px;margin:0;padding:0;">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="contactos.html">Contactos</a></li>
+        <li><a href="login.html">Iniciar sesión</a></li>
+      </ul>
+    </nav>
+  </header>
+
   
-  <style>
+ <style>
     .about-header {
       text-align: center;
       margin-bottom: 3rem;
@@ -83,23 +104,9 @@
       letter-spacing: 1px;
     }
   </style>
-</head>
-
-<body>
-  <header>
-    <div class="logo">dali medica</div>
-    <nav>
-      <ul style="list-style: none; display: flex; gap: 16px; margin: 0; padding: 0;">
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="productos.html">Productos</a></li>
-        <li><a href="nosotros.html">Nosotros</a></li>
-        <li><a href="contactos.html">Contactos</a></li>
-        <li><a href="login.html">Iniciar sesión</a></li>
-      </ul>
-    </nav>
-  </header>
 
   <main class="container">
+    <main class="container">
     <section class="about-header">
       <h1>Innovación y Confianza en Salud</h1>
       <p>Transformando el suministro médico en Costa Rica mediante tecnología de vanguardia, validación rigurosa y atención personalizada.</p>
@@ -137,11 +144,27 @@
       </div>
     </section>
   </main>
+  <footer style="margin-top:40px;padding:24px 20px;background:#f7f7f7;border-top:1px solid #e0e0e0;color:#555;">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:flex-start;max-width:1200px;margin:0 auto;">
+      <div style="flex:1;min-width:260px;padding-left:8px;">
+        <h3 style="margin:0 0 10px;color:#1a73e8;">Suscríbete a noticias</h3>
+        <p style="margin:0 0 10px;">Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
+        <form>
+          <label for="newsletter-email-nosotros" style="display:block;margin-bottom:6px;font-weight:600;">Correo electrónico</label>
+          <input id="newsletter-email-nosotros" type="email" placeholder="Tu correo" required style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;">
+          <button type="submit" style="margin-top:8px;padding:8px 12px;border:none;border-radius:6px;background:#1a73e8;color:#fff;cursor:pointer;">Registrarme</button>
+        </form>
+      </div>
+      <div style="flex:1;min-width:260px;">
+        <h3 style="margin:0 0 10px;color:#1a73e8;">Contáctanos</h3>
+        <p style="margin:0 0 6px;"><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
+        <p style="margin:0 0 6px;"><strong>Correo:</strong> contacto@dalimedica.com</p>
+        <p style="margin:0;">Centro Médico Dali Medica · San José, Costa Rica</p>
+      </div>
+    </div>
 
-  <footer>
-    <p style="text-align: center; margin: 0; padding: 18px 24px; background: #f7f7f7; color: #666; font-size: 14px;">
-      &copy; 2026 Dali Medica — Página pública
-    </p>
+    
+    <p style="text-align:center;margin:16px 0 0;padding-top:12px;border-top:1px solid #e0e0e0;">&copy; 2026 Dali Medica — Página pública</p>
   </footer>
 </body>
 </html>
