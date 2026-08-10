@@ -24,6 +24,7 @@ const itemsPerPage = 10;
 let currentSearch = "";
 let pendingDeleteId = null;
 let undoTimeout = null;
+let editingProductId = null;
 
 // 4. Utilidad: Debounce
 function debounce(func, delay) {
@@ -35,6 +36,14 @@ function debounce(func, delay) {
 }
 
 // 5. Renderizado de la Tabla y Paginación
+function escapeAttribute(value) {
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
 function renderProducts() {
     if (!productList) return;
 
@@ -59,17 +68,45 @@ function renderProducts() {
     productList.innerHTML = "";
     productosPagina.forEach((producto) => {
         const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${producto.name}</td>
-            <td>${producto.type}</td>
-            <td>${formatPrice(producto.price)}</td>
-            <td>${producto.prescription === 'si' ? 'Sí' : 'No'}</td>
-            <td>${producto.description}</td>
-            <td class="actions">
-                <button type="button" class="secondary" onclick="editProduct('${producto.id}')">Editar</button>
-                <button type="button" class="remove-btn" onclick="requestDeleteProduct('${producto.id}')">Eliminar</button>
-            </td>
-        `;
+        row.dataset.productId = producto.id;
+
+        if (editingProductId === producto.id) {
+            row.innerHTML = `
+                <td><input data-field="name" value="${escapeAttribute(producto.name)}" style="width:100%"></td>
+                <td>
+                    <select data-field="type" style="width:100%">
+                        <option value="Prótesis" ${producto.type === 'Prótesis' ? 'selected' : ''}>Prótesis</option>
+                        <option value="Medicamento" ${producto.type === 'Medicamento' ? 'selected' : ''}>Medicamento</option>
+                        <option value="Insumo" ${producto.type === 'Insumo' ? 'selected' : ''}>Insumo</option>
+                        <option value="Equipo" ${producto.type === 'Equipo' ? 'selected' : ''}>Equipo</option>
+                    </select>
+                </td>
+                <td><input data-field="price" type="number" value="${producto.price}" style="width:100%"></td>
+                <td>
+                    <select data-field="prescription" style="width:100%">
+                        <option value="no" ${producto.prescription === 'no' ? 'selected' : ''}>No</option>
+                        <option value="si" ${producto.prescription === 'si' ? 'selected' : ''}>Sí</option>
+                    </select>
+                </td>
+                <td><textarea data-field="description" rows="3" style="width:100%">${escapeAttribute(producto.description)}</textarea></td>
+                <td class="actions">
+                    <button type="button" onclick="saveInlineEdit('${producto.id}')">Guardar</button>
+                    <button type="button" class="secondary" onclick="cancelInlineEdit()">Cancelar</button>
+                </td>
+            `;
+        } else {
+            row.innerHTML = `
+                <td>${producto.name}</td>
+                <td>${producto.type}</td>
+                <td>${formatPrice(producto.price)}</td>
+                <td>${producto.prescription === 'si' ? 'Sí' : 'No'}</td>
+                <td>${producto.description}</td>
+                <td class="actions">
+                    <button type="button" class="secondary" onclick="editProduct('${producto.id}')">Editar</button>
+                    <button type="button" class="remove-btn" onclick="requestDeleteProduct('${producto.id}')">Eliminar</button>
+                </td>
+            `;
+        }
         productList.appendChild(row);
     });
 
@@ -112,17 +149,50 @@ if (searchInput) {
     }, 300));
 }
 
-// 7. Edición
+// 7. Edición inline en la tabla
 function editProduct(id) {
     const producto = getItemById('productos', id);
     if (!producto) return;
 
-    inputId.value = producto.id;
-    inputName.value = producto.name;
-    inputType.value = producto.type;
-    inputPrice.value = producto.price;
-    inputPrescription.value = producto.prescription;
-    inputDescription.value = producto.description;
+    editingProductId = id;
+    renderProducts();
+}
+
+function saveInlineEdit(id) {
+    const row = productList.querySelector(`tr[data-product-id="${id}"]`);
+    if (!row) return;
+
+    const name = row.querySelector('[data-field="name"]').value.trim();
+    const price = Number(row.querySelector('[data-field="price"]').value);
+    const type = row.querySelector('[data-field="type"]').value;
+    const prescription = row.querySelector('[data-field="prescription"]').value;
+    const description = row.querySelector('[data-field="description"]').value.trim();
+
+    if (name.length < 2) {
+        alert("Error: El nombre del producto debe tener al menos 2 caracteres.");
+        return;
+    }
+
+    if (isNaN(price) || price <= 0) {
+        alert("Error: El precio debe ser un número mayor a 0.");
+        return;
+    }
+
+    updateItem('productos', id, {
+        name,
+        type,
+        price,
+        prescription,
+        description,
+    });
+
+    editingProductId = null;
+    renderProducts();
+}
+
+function cancelInlineEdit() {
+    editingProductId = null;
+    renderProducts();
 }
 
 // 8. Eliminación con Deshacer (Undo)
