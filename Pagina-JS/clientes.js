@@ -23,7 +23,7 @@ const itemsPerPage = 10;
 let currentSearch = "";
 let pendingDeleteId = null;
 let undoTimeout = null;
-let editingRowId = null; // ID de la fila en edición inline
+let editingRowId = null;
 
 // 4. Utilidad: Debounce
 function debounce(func, delay) {
@@ -34,7 +34,14 @@ function debounce(func, delay) {
     };
 }
 
-// 5. Renderizado de la Tabla y Paginación (Read)
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// 5. Renderizado de la Tabla y Paginación
 function renderClients() {
     if (!clientList) return;
 
@@ -62,7 +69,6 @@ function renderClients() {
         row.dataset.id = cliente.id;
 
         if (editingRowId === cliente.id) {
-            // MODO EDICIÓN INLINE
             row.innerHTML = `
                 <td><input type="text" id="edit-name-${cliente.id}" value="${escapeHtml(cliente.name)}" style="width:100%;padding:4px;"></td>
                 <td><input type="email" id="edit-email-${cliente.id}" value="${escapeHtml(cliente.email)}" style="width:100%;padding:4px;"></td>
@@ -74,7 +80,6 @@ function renderClients() {
                 </td>
             `;
         } else {
-            // MODO VISUALIZACIÓN
             row.innerHTML = `
                 <td>${cliente.name}</td>
                 <td>${cliente.email}</td>
@@ -115,17 +120,10 @@ function renderPagination(totalPages) {
     paginationControls.appendChild(nextBtn);
 }
 
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
 // 6. Buscador con Debounce
 if (searchInput) {
     searchInput.addEventListener("input", debounce((e) => {
-        if (editingRowId) return; // No buscar mientras se edita
+        if (editingRowId) return;
         currentSearch = e.target.value;
         currentPage = 1;
         renderClients();
@@ -136,7 +134,6 @@ if (searchInput) {
 function startInlineEdit(id) {
     editingRowId = id;
     renderClients();
-    // Focus en el primer campo
     setTimeout(() => {
         const input = document.getElementById(`edit-name-${id}`);
         if (input) input.focus();
@@ -154,7 +151,6 @@ function saveInlineEdit(id) {
     const phone = document.getElementById(`edit-phone-${id}`).value.trim();
     const notes = document.getElementById(`edit-notes-${id}`).value.trim();
 
-    // Validaciones
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         alert("Error: Por favor ingresa un correo válido.");
@@ -172,47 +168,71 @@ function saveInlineEdit(id) {
     renderClients();
 }
 
-// 8. Eliminación con Deshacer (Undo)
-function requestDeleteClient(id) {
-    if (editingRowId) return; // No eliminar mientras se edita
 
+// Variable global para tracking del toast activo
+let activeToast = null;
+
+// 8. Eliminación con Deshacer (Undo) - CORREGIDO
+function requestDeleteClient(id) {
+    if (editingRowId) return;
+
+    // Si ya hay un toast activo, confirmar ese borrado primero
     if (pendingDeleteId) {
         commitDelete();
+        clearTimeout(undoTimeout);
+        if (activeToast && document.body.contains(activeToast)) {
+            document.body.removeChild(activeToast);
+        }
     }
 
     pendingDeleteId = id;
     renderClients();
 
+    // Crear nuevo toast
     const toast = document.createElement("div");
-    toast.id = "undoToast";
+    activeToast = toast;
+    toast.className = "undo-toast";
     toast.style.position = "fixed";
     toast.style.bottom = "20px";
     toast.style.right = "20px";
     toast.style.background = "#333";
     toast.style.color = "white";
-    toast.style.padding = "15px";
-    toast.style.borderRadius = "5px";
+    toast.style.padding = "15px 20px";
+    toast.style.borderRadius = "8px";
     toast.style.zIndex = "9999";
-    toast.style.boxShadow = "0 4px 6px rgba(0,0,0,0.1)";
+    toast.style.boxShadow = "0 4px 12px rgba(0,0,0,0.3)";
+    toast.style.display = "flex";
+    toast.style.alignItems = "center";
+    toast.style.gap = "12px";
 
     toast.innerHTML = `
-        Cliente eliminado temporalmente. 
-        <button id="undoBtn" style="margin-left: 10px; color: #ffeb3b; background: none; border: none; cursor: pointer; text-decoration: underline; font-weight: bold;">
+        <span>Cliente eliminado temporalmente.</span>
+        <button class="undo-btn" style="color: #ffeb3b; background: none; border: none; cursor: pointer; text-decoration: underline; font-weight: bold; padding: 4px 8px;">
             Deshacer
         </button>
     `;
+
     document.body.appendChild(toast);
 
-    document.getElementById("undoBtn").onclick = () => {
+    // Adjuntar evento al botón específico de ESTE toast
+    const undoBtn = toast.querySelector(".undo-btn");
+    undoBtn.addEventListener("click", function() {
         clearTimeout(undoTimeout);
         pendingDeleteId = null;
-        document.body.removeChild(toast);
+        if (document.body.contains(toast)) {
+            document.body.removeChild(toast);
+        }
+        activeToast = null;
         renderClients();
-    };
+    });
 
+    // Temporizador de 5 segundos
     undoTimeout = setTimeout(() => {
         commitDelete();
-        if(document.body.contains(toast)) document.body.removeChild(toast);
+        if (document.body.contains(toast)) {
+            document.body.removeChild(toast);
+        }
+        activeToast = null;
     }, 5000);
 }
 
@@ -222,6 +242,7 @@ function commitDelete() {
         pendingDeleteId = null;
     }
 }
+
 
 // 9. Guardado desde el Formulario (Crear nuevo)
 if (clientForm) {

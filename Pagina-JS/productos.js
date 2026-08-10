@@ -35,6 +35,17 @@ function debounce(func, delay) {
     };
 }
 
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function formatPrice(amount) {
+    return '₡' + Number(amount).toLocaleString('es-CR');
+}
+
 // 5. Renderizado de la Tabla y Paginación
 function renderProducts() {
     if (!productList) return;
@@ -63,7 +74,6 @@ function renderProducts() {
         row.dataset.id = producto.id;
 
         if (editingRowId === producto.id) {
-            // MODO EDICIÓN INLINE
             row.innerHTML = `
                 <td><input type="text" id="edit-name-${producto.id}" value="${escapeHtml(producto.name)}" style="width:100%;padding:4px;"></td>
                 <td>
@@ -88,7 +98,6 @@ function renderProducts() {
                 </td>
             `;
         } else {
-            // MODO VISUALIZACIÓN
             row.innerHTML = `
                 <td>${producto.name}</td>
                 <td>${producto.type}</td>
@@ -128,17 +137,6 @@ function renderPagination(totalPages) {
     paginationControls.appendChild(prevBtn);
     paginationControls.appendChild(spanInfo);
     paginationControls.appendChild(nextBtn);
-}
-
-function formatPrice(amount) {
-    return '₡' + Number(amount).toLocaleString('es-CR');
-}
-
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
 }
 
 // 6. Buscador con Debounce
@@ -188,47 +186,71 @@ function saveInlineEdit(id) {
     renderProducts();
 }
 
-// 8. Eliminación con Deshacer (Undo)
+
+// Variable global para tracking del toast activo
+let activeToast = null;
+
+// 8. Eliminación con Deshacer (Undo) - CORREGIDO
 function requestDeleteProduct(id) {
     if (editingRowId) return;
 
+    // Si ya hay un toast activo, confirmar ese borrado primero
     if (pendingDeleteId) {
         commitDelete();
+        clearTimeout(undoTimeout);
+        if (activeToast && document.body.contains(activeToast)) {
+            document.body.removeChild(activeToast);
+        }
     }
 
     pendingDeleteId = id;
     renderProducts();
 
+    // Crear nuevo toast
     const toast = document.createElement("div");
-    toast.id = "undoToast";
+    activeToast = toast;
+    toast.className = "undo-toast";
     toast.style.position = "fixed";
     toast.style.bottom = "20px";
     toast.style.right = "20px";
     toast.style.background = "#333";
     toast.style.color = "white";
-    toast.style.padding = "15px";
-    toast.style.borderRadius = "5px";
+    toast.style.padding = "15px 20px";
+    toast.style.borderRadius = "8px";
     toast.style.zIndex = "9999";
-    toast.style.boxShadow = "0 4px 6px rgba(0,0,0,0.1)";
+    toast.style.boxShadow = "0 4px 12px rgba(0,0,0,0.3)";
+    toast.style.display = "flex";
+    toast.style.alignItems = "center";
+    toast.style.gap = "12px";
 
     toast.innerHTML = `
-        Producto eliminado temporalmente. 
-        <button id="undoBtn" style="margin-left: 10px; color: #ffeb3b; background: none; border: none; cursor: pointer; text-decoration: underline; font-weight: bold;">
+        <span>Producto eliminado temporalmente.</span>
+        <button class="undo-btn" style="color: #ffeb3b; background: none; border: none; cursor: pointer; text-decoration: underline; font-weight: bold; padding: 4px 8px;">
             Deshacer
         </button>
     `;
+
     document.body.appendChild(toast);
 
-    document.getElementById("undoBtn").onclick = () => {
+    // Adjuntar evento al botón específico de ESTE toast
+    const undoBtn = toast.querySelector(".undo-btn");
+    undoBtn.addEventListener("click", function() {
         clearTimeout(undoTimeout);
         pendingDeleteId = null;
-        document.body.removeChild(toast);
+        if (document.body.contains(toast)) {
+            document.body.removeChild(toast);
+        }
+        activeToast = null;
         renderProducts();
-    };
+    });
 
+    // Temporizador de 5 segundos
     undoTimeout = setTimeout(() => {
         commitDelete();
-        if(document.body.contains(toast)) document.body.removeChild(toast);
+        if (document.body.contains(toast)) {
+            document.body.removeChild(toast);
+        }
+        activeToast = null;
     }, 5000);
 }
 
@@ -238,6 +260,7 @@ function commitDelete() {
         pendingDeleteId = null;
     }
 }
+
 
 // 9. Guardado desde el Formulario (Crear nuevo)
 if (productForm) {
