@@ -1,5 +1,5 @@
 /**
- * productos.js — CRUD Avanzado de Productos
+ * productos.js — CRUD Avanzado de Productos con Edición Inline
  * Sistema Administrativo Web · Dali Medica
  */
 
@@ -24,7 +24,7 @@ const itemsPerPage = 10;
 let currentSearch = "";
 let pendingDeleteId = null;
 let undoTimeout = null;
-let editingProductId = null;
+let editingRowId = null;
 
 // 4. Utilidad: Debounce
 function debounce(func, delay) {
@@ -36,14 +36,6 @@ function debounce(func, delay) {
 }
 
 // 5. Renderizado de la Tabla y Paginación
-function escapeAttribute(value) {
-    return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-}
-
 function renderProducts() {
     if (!productList) return;
 
@@ -68,33 +60,35 @@ function renderProducts() {
     productList.innerHTML = "";
     productosPagina.forEach((producto) => {
         const row = document.createElement("tr");
-        row.dataset.productId = producto.id;
+        row.dataset.id = producto.id;
 
-        if (editingProductId === producto.id) {
+        if (editingRowId === producto.id) {
+            // MODO EDICIÓN INLINE
             row.innerHTML = `
-                <td><input data-field="name" value="${escapeAttribute(producto.name)}" style="width:100%"></td>
+                <td><input type="text" id="edit-name-${producto.id}" value="${escapeHtml(producto.name)}" style="width:100%;padding:4px;"></td>
                 <td>
-                    <select data-field="type" style="width:100%">
+                    <select id="edit-type-${producto.id}" style="width:100%;padding:4px;">
                         <option value="Prótesis" ${producto.type === 'Prótesis' ? 'selected' : ''}>Prótesis</option>
                         <option value="Medicamento" ${producto.type === 'Medicamento' ? 'selected' : ''}>Medicamento</option>
                         <option value="Insumo" ${producto.type === 'Insumo' ? 'selected' : ''}>Insumo</option>
                         <option value="Equipo" ${producto.type === 'Equipo' ? 'selected' : ''}>Equipo</option>
                     </select>
                 </td>
-                <td><input data-field="price" type="number" value="${producto.price}" style="width:100%"></td>
+                <td><input type="number" id="edit-price-${producto.id}" value="${producto.price}" style="width:100%;padding:4px;"></td>
                 <td>
-                    <select data-field="prescription" style="width:100%">
+                    <select id="edit-prescription-${producto.id}" style="width:100%;padding:4px;">
                         <option value="no" ${producto.prescription === 'no' ? 'selected' : ''}>No</option>
                         <option value="si" ${producto.prescription === 'si' ? 'selected' : ''}>Sí</option>
                     </select>
                 </td>
-                <td><textarea data-field="description" rows="3" style="width:100%">${escapeAttribute(producto.description)}</textarea></td>
+                <td><textarea id="edit-description-${producto.id}" rows="2" style="width:100%;padding:4px;">${escapeHtml(producto.description)}</textarea></td>
                 <td class="actions">
-                    <button type="button" onclick="saveInlineEdit('${producto.id}')">Guardar</button>
-                    <button type="button" class="secondary" onclick="cancelInlineEdit()">Cancelar</button>
+                    <button type="button" class="secondary" onclick="saveInlineEdit('${producto.id}')">Guardar</button>
+                    <button type="button" class="remove-btn" onclick="cancelInlineEdit()">Cancelar</button>
                 </td>
             `;
         } else {
+            // MODO VISUALIZACIÓN
             row.innerHTML = `
                 <td>${producto.name}</td>
                 <td>${producto.type}</td>
@@ -102,7 +96,7 @@ function renderProducts() {
                 <td>${producto.prescription === 'si' ? 'Sí' : 'No'}</td>
                 <td>${producto.description}</td>
                 <td class="actions">
-                    <button type="button" class="secondary" onclick="editProduct('${producto.id}')">Editar</button>
+                    <button type="button" class="secondary" onclick="startInlineEdit('${producto.id}')">Editar</button>
                     <button type="button" class="remove-btn" onclick="requestDeleteProduct('${producto.id}')">Eliminar</button>
                 </td>
             `;
@@ -119,12 +113,12 @@ function renderPagination(totalPages) {
 
     const prevBtn = document.createElement("button");
     prevBtn.textContent = "Anterior";
-    prevBtn.disabled = currentPage === 1;
+    prevBtn.disabled = currentPage === 1 || editingRowId !== null;
     prevBtn.onclick = () => { currentPage--; renderProducts(); };
 
     const nextBtn = document.createElement("button");
     nextBtn.textContent = "Siguiente";
-    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.disabled = currentPage === totalPages || editingRowId !== null;
     nextBtn.onclick = () => { currentPage++; renderProducts(); };
 
     const spanInfo = document.createElement("span");
@@ -140,33 +134,44 @@ function formatPrice(amount) {
     return '₡' + Number(amount).toLocaleString('es-CR');
 }
 
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 // 6. Buscador con Debounce
 if (searchInput) {
     searchInput.addEventListener("input", debounce((e) => {
+        if (editingRowId) return;
         currentSearch = e.target.value;
         currentPage = 1;
         renderProducts();
     }, 300));
 }
 
-// 7. Edición inline en la tabla
-function editProduct(id) {
-    const producto = getItemById('productos', id);
-    if (!producto) return;
+// 7. EDICIÓN INLINE
+function startInlineEdit(id) {
+    editingRowId = id;
+    renderProducts();
+    setTimeout(() => {
+        const input = document.getElementById(`edit-name-${id}`);
+        if (input) input.focus();
+    }, 10);
+}
 
-    editingProductId = id;
+function cancelInlineEdit() {
+    editingRowId = null;
     renderProducts();
 }
 
 function saveInlineEdit(id) {
-    const row = productList.querySelector(`tr[data-product-id="${id}"]`);
-    if (!row) return;
-
-    const name = row.querySelector('[data-field="name"]').value.trim();
-    const price = Number(row.querySelector('[data-field="price"]').value);
-    const type = row.querySelector('[data-field="type"]').value;
-    const prescription = row.querySelector('[data-field="prescription"]').value;
-    const description = row.querySelector('[data-field="description"]').value.trim();
+    const name = document.getElementById(`edit-name-${id}`).value.trim();
+    const type = document.getElementById(`edit-type-${id}`).value;
+    const price = Number(document.getElementById(`edit-price-${id}`).value);
+    const prescription = document.getElementById(`edit-prescription-${id}`).value;
+    const description = document.getElementById(`edit-description-${id}`).value.trim();
 
     if (name.length < 2) {
         alert("Error: El nombre del producto debe tener al menos 2 caracteres.");
@@ -178,25 +183,15 @@ function saveInlineEdit(id) {
         return;
     }
 
-    updateItem('productos', id, {
-        name,
-        type,
-        price,
-        prescription,
-        description,
-    });
-
-    editingProductId = null;
-    renderProducts();
-}
-
-function cancelInlineEdit() {
-    editingProductId = null;
+    updateItem('productos', id, { name, type, price, prescription, description });
+    editingRowId = null;
     renderProducts();
 }
 
 // 8. Eliminación con Deshacer (Undo)
 function requestDeleteProduct(id) {
+    if (editingRowId) return;
+
     if (pendingDeleteId) {
         commitDelete();
     }
@@ -244,7 +239,7 @@ function commitDelete() {
     }
 }
 
-// 9. Validaciones Avanzadas y Guardado
+// 9. Guardado desde el Formulario (Crear nuevo)
 if (productForm) {
     productForm.addEventListener("submit", function (e) {
         e.preventDefault();
@@ -270,12 +265,7 @@ if (productForm) {
             description: inputDescription.value.trim(),
         };
 
-        const currentId = inputId.value;
-        if (currentId) {
-            updateItem('productos', currentId, productoData);
-        } else {
-            addItem('productos', productoData);
-        }
+        addItem('productos', productoData);
 
         productForm.reset();
         inputId.value = "";

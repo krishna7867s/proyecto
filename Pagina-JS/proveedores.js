@@ -1,5 +1,5 @@
 /**
- * clientes.js — CRUD Avanzado de Clientes con Edición Inline
+ * proveedores.js — CRUD Avanzado de Proveedores con Edición Inline
  * Sistema Administrativo Web · Dali Medica
  */
 
@@ -7,14 +7,15 @@
 verificarSesion(['empleado', 'admin']);
 
 // 2. Elementos del DOM
-const clientForm = document.getElementById("clientForm");
-const clientList = document.getElementById("clientList");
-const inputId = document.getElementById("clientId");
-const inputName = document.getElementById("clientName");
-const inputEmail = document.getElementById("clientEmail");
-const inputPhone = document.getElementById("clientPhone");
-const inputNotes = document.getElementById("clientNotes");
-const searchInput = document.getElementById("searchClient");
+const providerForm = document.getElementById("providerForm");
+const providerList = document.getElementById("providerList");
+const inputId = document.getElementById("providerId");
+const inputName = document.getElementById("providerName");
+const inputContact = document.getElementById("providerContact");
+const inputEmail = document.getElementById("providerEmail");
+const inputPhone = document.getElementById("providerPhone");
+const inputNotes = document.getElementById("providerNotes");
+const searchInput = document.getElementById("searchProvider");
 const paginationControls = document.getElementById("paginationControls");
 
 // 3. Estado
@@ -23,7 +24,7 @@ const itemsPerPage = 10;
 let currentSearch = "";
 let pendingDeleteId = null;
 let undoTimeout = null;
-let editingRowId = null; // ID de la fila en edición inline
+let editingRowId = null;
 
 // 4. Utilidad: Debounce
 function debounce(func, delay) {
@@ -34,19 +35,19 @@ function debounce(func, delay) {
     };
 }
 
-// 5. Renderizado de la Tabla y Paginación (Read)
-function renderClients() {
-    if (!clientList) return;
+// 5. Renderizado de la Tabla y Paginación
+function renderProviders() {
+    if (!providerList) return;
 
-    const todos = getData('clientes');
+    const todos = getData('proveedores');
 
-    const filtrados = todos.filter(cliente => {
+    const filtrados = todos.filter(proveedor => {
         const query = currentSearch.toLowerCase();
-        if (cliente.id === pendingDeleteId) return false;
+        if (proveedor.id === pendingDeleteId) return false;
 
-        return cliente.name.toLowerCase().includes(query) || 
-               cliente.email.toLowerCase().includes(query) ||
-               cliente.phone.toLowerCase().includes(query);
+        return proveedor.name.toLowerCase().includes(query) || 
+               proveedor.contact.toLowerCase().includes(query) ||
+               proveedor.email.toLowerCase().includes(query);
     });
 
     const totalPages = Math.ceil(filtrados.length / itemsPerPage) || 1;
@@ -54,39 +55,41 @@ function renderClients() {
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const clientesPagina = filtrados.slice(startIndex, endIndex);
+    const proveedoresPagina = filtrados.slice(startIndex, endIndex);
 
-    clientList.innerHTML = "";
-    clientesPagina.forEach((cliente) => {
+    providerList.innerHTML = "";
+    proveedoresPagina.forEach((proveedor) => {
         const row = document.createElement("tr");
-        row.dataset.id = cliente.id;
+        row.dataset.id = proveedor.id;
 
-        if (editingRowId === cliente.id) {
+        if (editingRowId === proveedor.id) {
             // MODO EDICIÓN INLINE
             row.innerHTML = `
-                <td><input type="text" id="edit-name-${cliente.id}" value="${escapeHtml(cliente.name)}" style="width:100%;padding:4px;"></td>
-                <td><input type="email" id="edit-email-${cliente.id}" value="${escapeHtml(cliente.email)}" style="width:100%;padding:4px;"></td>
-                <td><input type="text" id="edit-phone-${cliente.id}" value="${escapeHtml(cliente.phone)}" style="width:100%;padding:4px;"></td>
-                <td><textarea id="edit-notes-${cliente.id}" rows="2" style="width:100%;padding:4px;">${escapeHtml(cliente.notes)}</textarea></td>
+                <td><input type="text" id="edit-name-${proveedor.id}" value="${escapeHtml(proveedor.name)}" style="width:100%;padding:4px;"></td>
+                <td><input type="text" id="edit-contact-${proveedor.id}" value="${escapeHtml(proveedor.contact)}" style="width:100%;padding:4px;"></td>
+                <td><input type="email" id="edit-email-${proveedor.id}" value="${escapeHtml(proveedor.email)}" style="width:100%;padding:4px;"></td>
+                <td><input type="text" id="edit-phone-${proveedor.id}" value="${escapeHtml(proveedor.phone)}" style="width:100%;padding:4px;"></td>
+                <td><textarea id="edit-notes-${proveedor.id}" rows="2" style="width:100%;padding:4px;">${escapeHtml(proveedor.notes)}</textarea></td>
                 <td class="actions">
-                    <button type="button" class="secondary" onclick="saveInlineEdit('${cliente.id}')">Guardar</button>
+                    <button type="button" class="secondary" onclick="saveInlineEdit('${proveedor.id}')">Guardar</button>
                     <button type="button" class="remove-btn" onclick="cancelInlineEdit()">Cancelar</button>
                 </td>
             `;
         } else {
             // MODO VISUALIZACIÓN
             row.innerHTML = `
-                <td>${cliente.name}</td>
-                <td>${cliente.email}</td>
-                <td>${cliente.phone}</td>
-                <td>${cliente.notes}</td>
+                <td>${proveedor.name}</td>
+                <td>${proveedor.contact}</td>
+                <td>${proveedor.email}</td>
+                <td>${proveedor.phone}</td>
+                <td>${proveedor.notes}</td>
                 <td class="actions">
-                    <button type="button" class="secondary" onclick="startInlineEdit('${cliente.id}')">Editar</button>
-                    <button type="button" class="remove-btn" onclick="requestDeleteClient('${cliente.id}')">Eliminar</button>
+                    <button type="button" class="secondary" onclick="startInlineEdit('${proveedor.id}')">Editar</button>
+                    <button type="button" class="remove-btn" onclick="requestDeleteProvider('${proveedor.id}')">Eliminar</button>
                 </td>
             `;
         }
-        clientList.appendChild(row);
+        providerList.appendChild(row);
     });
 
     renderPagination(totalPages);
@@ -99,12 +102,12 @@ function renderPagination(totalPages) {
     const prevBtn = document.createElement("button");
     prevBtn.textContent = "Anterior";
     prevBtn.disabled = currentPage === 1 || editingRowId !== null;
-    prevBtn.onclick = () => { currentPage--; renderClients(); };
+    prevBtn.onclick = () => { currentPage--; renderProviders(); };
 
     const nextBtn = document.createElement("button");
     nextBtn.textContent = "Siguiente";
     nextBtn.disabled = currentPage === totalPages || editingRowId !== null;
-    nextBtn.onclick = () => { currentPage++; renderClients(); };
+    nextBtn.onclick = () => { currentPage++; renderProviders(); };
 
     const spanInfo = document.createElement("span");
     spanInfo.textContent = ` Página ${currentPage} de ${totalPages} `;
@@ -125,18 +128,17 @@ function escapeHtml(text) {
 // 6. Buscador con Debounce
 if (searchInput) {
     searchInput.addEventListener("input", debounce((e) => {
-        if (editingRowId) return; // No buscar mientras se edita
+        if (editingRowId) return;
         currentSearch = e.target.value;
         currentPage = 1;
-        renderClients();
+        renderProviders();
     }, 300));
 }
 
 // 7. EDICIÓN INLINE
 function startInlineEdit(id) {
     editingRowId = id;
-    renderClients();
-    // Focus en el primer campo
+    renderProviders();
     setTimeout(() => {
         const input = document.getElementById(`edit-name-${id}`);
         if (input) input.focus();
@@ -145,16 +147,16 @@ function startInlineEdit(id) {
 
 function cancelInlineEdit() {
     editingRowId = null;
-    renderClients();
+    renderProviders();
 }
 
 function saveInlineEdit(id) {
     const name = document.getElementById(`edit-name-${id}`).value.trim();
+    const contact = document.getElementById(`edit-contact-${id}`).value.trim();
     const email = document.getElementById(`edit-email-${id}`).value.trim();
     const phone = document.getElementById(`edit-phone-${id}`).value.trim();
     const notes = document.getElementById(`edit-notes-${id}`).value.trim();
 
-    // Validaciones
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         alert("Error: Por favor ingresa un correo válido.");
@@ -167,21 +169,21 @@ function saveInlineEdit(id) {
         return;
     }
 
-    updateItem('clientes', id, { name, email, phone, notes });
+    updateItem('proveedores', id, { name, contact, email, phone, notes });
     editingRowId = null;
-    renderClients();
+    renderProviders();
 }
 
 // 8. Eliminación con Deshacer (Undo)
-function requestDeleteClient(id) {
-    if (editingRowId) return; // No eliminar mientras se edita
+function requestDeleteProvider(id) {
+    if (editingRowId) return;
 
     if (pendingDeleteId) {
         commitDelete();
     }
 
     pendingDeleteId = id;
-    renderClients();
+    renderProviders();
 
     const toast = document.createElement("div");
     toast.id = "undoToast";
@@ -196,7 +198,7 @@ function requestDeleteClient(id) {
     toast.style.boxShadow = "0 4px 6px rgba(0,0,0,0.1)";
 
     toast.innerHTML = `
-        Cliente eliminado temporalmente. 
+        Proveedor eliminado temporalmente. 
         <button id="undoBtn" style="margin-left: 10px; color: #ffeb3b; background: none; border: none; cursor: pointer; text-decoration: underline; font-weight: bold;">
             Deshacer
         </button>
@@ -207,7 +209,7 @@ function requestDeleteClient(id) {
         clearTimeout(undoTimeout);
         pendingDeleteId = null;
         document.body.removeChild(toast);
-        renderClients();
+        renderProviders();
     };
 
     undoTimeout = setTimeout(() => {
@@ -218,14 +220,14 @@ function requestDeleteClient(id) {
 
 function commitDelete() {
     if (pendingDeleteId) {
-        deleteItem('clientes', pendingDeleteId);
+        deleteItem('proveedores', pendingDeleteId);
         pendingDeleteId = null;
     }
 }
 
 // 9. Guardado desde el Formulario (Crear nuevo)
-if (clientForm) {
-    clientForm.addEventListener("submit", function (e) {
+if (providerForm) {
+    providerForm.addEventListener("submit", function (e) {
         e.preventDefault();
 
         const email = inputEmail.value.trim();
@@ -233,7 +235,7 @@ if (clientForm) {
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            alert("Error: Por favor ingresa un correo válido (ej. juan@gmail.com).");
+            alert("Error: Por favor ingresa un correo válido.");
             return;
         }
 
@@ -243,21 +245,22 @@ if (clientForm) {
             return;
         }
 
-        const clienteData = {
+        const proveedorData = {
             name: inputName.value.trim(),
+            contact: inputContact.value.trim(),
             email: email,
             phone: phone,
             notes: inputNotes.value.trim(),
         };
 
-        addItem('clientes', clienteData);
+        addItem('proveedores', proveedorData);
 
-        clientForm.reset();
+        providerForm.reset();
         inputId.value = "";
-        renderClients();
+        renderProviders();
     });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    renderClients();
+    renderProviders();
 });
