@@ -1,0 +1,246 @@
+/* ==========================================================================
+   DALI MEDICA - ÁREA PRIVADA / PANEL DE ADMINISTRACIÓN
+   ========================================================================== */
+
+/* --- Configuración Global --- */
+:root {
+  --admin-primary: #1a73e8;
+  --admin-primary-hover: #1557b0;
+  --admin-bg: #f8fafc;
+  --admin-card-bg: #ffffff;
+  --admin-text-main: #1e293b;
+  --admin-text-muted: #64748b;
+  --admin-border: #e2e8f0;
+  --admin-footer-bg: #0f172a;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif !important;
+  background-color: var(--admin-bg) !important;
+  color: var(--admin-text-main) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.6;
+}
+
+/* --- Cabecera y Navegación --- */
+header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 16px 28px !important;
+  background-color: #ffffff !important;
+  border-bottom: 2px solid #e0f2fe !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+header .logo {
+  font-weight: 700 !important;
+  font-size: 1.2rem !important;
+  color: var(--admin-primary) !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase;
+}
+
+header nav ul {
+  list-style: none !important;
+  display: flex !important;
+  gap: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-items: center !important;
+}
+
+header nav a {
+  text-decoration: none !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+header nav a:hover {
+  background-color: #f1f5f9 !important;
+  color: var(--admin-primary) !important;
+}
+
+/* --- Contenedor Principal --- */
+.container {
+  max-width: 1100px !important;
+  margin: 32px auto !important;
+  padding: 32px !important;
+  background-color: var(--admin-card-bg) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+.container h1 {
+  margin-top: 0 !important;
+  color: var(--admin-primary) !important;
+  font-size: 1.8rem !important;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 12px;
+}
+
+.container p {
+  color: var(--admin-text-muted) !important;
+}
+
+/* --- Formularios de Administración --- */
+form#clientForm,
+form#productForm,
+form#providerForm,
+.container form {
+  max-width: 700px !important;
+  margin-bottom: 32px !important;
+  background: #f8fafc !important;
+  padding: 24px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+label {
+  display: block !important;
+  margin: 12px 0 6px !important;
+  font-weight: 600 !important;
+  color: var(--admin-text-main) !important;
+  font-size: 0.9rem !important;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+  width: 100% !important;
+  padding: 10px 12px !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 6px !important;
+  background-color: #ffffff !important;
+  box-sizing: border-box !important;
+  font-size: 0.95rem !important;
+  color: var(--admin-text-main) !important;
+  outline: none !important;
+  transition: border-color 0.2s ease !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--admin-primary) !important;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15) !important;
+}
+
+/* --- Botones --- */
+button,
+button[type="submit"] {
+  margin-top: 16px !important;
+  padding: 10px 20px !important;
+  border: none !important;
+  border-radius: 6px !important;
+  background-color: var(--admin-primary) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease, transform 0.1s ease !important;
+}
+
+button:hover,
+button[type="submit"]:hover {
+  background-color: var(--admin-primary-hover) !important;
+}
+
+button:active {
+  transform: scale(0.98) !important;
+}
+
+/* Botones dentro de tablas (Acciones: Editar / Eliminar) */
+.actions button {
+  padding: 6px 12px !important;
+  font-size: 0.85rem !important;
+  margin-right: 6px !important;
+  margin-top: 0 !important;
+}
+
+.actions button:first-child {
+  background-color: #0284c7 !important; /* Azul para editar */
+}
+
+.actions button:last-child {
+  background-color: #ef4444 !important; /* Rojo para eliminar */
+}
+
+.actions button:hover {
+  opacity: 0.9 !important;
+}
+
+/* --- Tablas de Datos --- */
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin-top: 20px !important;
+  background-color: #ffffff !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  border: 1px solid var(--admin-border) !important;
+}
+
+th {
+  background-color: #f1f5f9 !important;
+  color: var(--admin-text-main) !important;
+  font-weight: 700 !important;
+  padding: 12px 16px !important;
+  text-align: left !important;
+  border-bottom: 2px solid var(--admin-border) !important;
+}
+
+td {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--admin-border) !important;
+  color: #334155 !important;
+  font-size: 0.92rem !important;
+}
+
+tr:hover {
+  background-color: #f8fafc !important;
+}
+
+/* --- Pie de Página (Footer) --- */
+footer {
+  margin-top: 60px !important;
+  padding: 40px 20px 24px !important;
+  background-color: var(--admin-footer-bg) !important;
+  border-top: 3px solid var(--admin-primary) !important;
+  color: #94a3b8 !important;
+}
+
+footer h3 {
+  color: #ffffff !important;
+  font-size: 1.1rem !important;
+  margin-bottom: 12px !important;
+}
+
+footer p {
+  color: #cbd5e1 !important;
+  font-size: 0.9rem !important;
+}
+
+footer input[type="email"] {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+  color: #ffffff !important;
+}
+
+footer button[type="submit"] {
+  margin-top: 8px !important;
+}
+
+footer > p {
+  text-align: center !important;
+  margin-top: 24px !important;
+  padding-top: 16px !important;
+  border-top: 1px solid #334155 !important;
+  color: #64748b !important;
+}
