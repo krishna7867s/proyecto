@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Dali Medica J Inicio</title>
-  <link rel="stylesheet" href="../Pagina-css/estilos.css">
+  <title>Dali Medica - Inicio</title>
+  <link rel="stylesheet" href="Pagina-css/estilos.css">
 </head>
 <body>
   <header>
@@ -26,6 +26,11 @@
       <p>
         Dali Medica es la plataforma confiable para el suministro integral de productos médicos en Costa Rica. Nuestro compromiso es ofrecer desde prótesis y equipos especializados hasta insumos de uso diario, siempre con la garantía de servicio profesional, asesoría técnica y cumplimiento normativo. Trabajamos con proveedores certificados para que los centros médicos, clínicas y profesionales de la salud cuenten con las mejores soluciones en cada etapa del proceso de atención.
       </p>
+
+      <div class="hero-image-container" id="interactiveImageBtn" title="Haz clic para cambiar la imagen">
+        <img id="heroImage" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQqVqxTYYYU1H7kERam8W0_y0IqFZyE8tObzx2QgGcYXm1GKZzJTM5ml0L&s=10" alt="Tecnología Médica Dali Medica">
+      </div>
+
       <p>
         En Dali Medica ponemos a su disposición un catálogo amplio que incluye artículos de alta tecnología y medicinas indispensables. Algunos productos requieren receta médica y el proceso de validación se realiza con cuidado para proteger la salud de los pacientes y cumplir con las normas sanitarias vigentes. Nuestro enfoque es acompañar a cada cliente con información clara, atención personalizada y entregas seguras en todo el país.
       </p>
@@ -47,6 +52,16 @@
           <button type="submit">Registrarme</button>
         </form>
       </div>
+      <div class="footer-block footer-providers">
+        <h3>Proveedores aliados</h3>
+        <p>Conoce a las marcas que respaldan nuestras soluciones médicas.</p>
+        <ul class="provider-links">
+          <li><a href="https://www.medtronic.com" target="_blank" rel="noopener noreferrer">Medtronic <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.jnjmedtech.com" target="_blank" rel="noopener noreferrer">Johnson &amp; Johnson MedTech <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.siemens-healthineers.com" target="_blank" rel="noopener noreferrer">Siemens Healthineers <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.gehealthcare.com" target="_blank" rel="noopener noreferrer">GE HealthCare <span aria-hidden="true">↗</span></a></li>
+        </ul>
+      </div>
       <div class="footer-block">
         <h3>Contáctanos</h3>
         <p><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
@@ -56,5 +71,39 @@
     </div>
     <p class="footer-copy">&copy; 2026 Dali Medica — Página pública</p>
   </footer>
+
+  <script src="../../Pagina-JS/site-header.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const images = [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQqVqxTYYYU1H7kERam8W0_y0IqFZyE8tObzx2QgGcYXm1GKZzJTM5ml0L&s=10",
+      "https://doctorvillanueva.com/wp-content/uploads/2022/10/Cirugia-Minimamente-Invasiva-de-Protesis-de-Rodilla-traumatologo-en-Madrid.jpg",
+      "https://walmartcr.vtexassets.com/arquivos/ids/953783/15290_01.jpg?v=638864800297300000",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFUCsaeYkQC9XFYO3QzZVQBOkBtXBX9K8yWcsZLcgdwspT9hU55MMxJDQ&s=10"
+    ];
+
+    let currentIndex = 0;
+    const imgElement = document.getElementById('heroImage');
+    const containerBtn = document.getElementById('interactiveImageBtn');
+    const counterElement = document.getElementById('imageCounter');
+
+    if (containerBtn && imgElement) {
+      containerBtn.addEventListener('click', function() {
+        imgElement.style.opacity = '0';
+
+        setTimeout(() => {
+          currentIndex = (currentIndex + 1) % images.length;
+          imgElement.src = images[currentIndex];
+          
+          if (counterElement) {
+            counterElement.textContent = `Imagen ${currentIndex + 1} / ${images.length} 🖱️ Haz clic`;
+          }
+
+          imgElement.style.opacity = '1';
+        }, 200);
+      });
+    }
+  });
+</script>
 </body>
 </html>

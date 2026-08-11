@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Productos - Dali Medica</title>
-  <link rel="stylesheet" href="../Pagina-css/estilos.css">
+  <link rel="stylesheet" href="Pagina-css/estilos.css">
 </head>
 <body>
   <header>
@@ -19,10 +19,22 @@
       </ul>
     </nav>
   </header>
+
   <main class="container">
     <section class="intro">
       <h1>Catálogo de productos médicos</h1>
       <p>Desde prótesis hasta productos simples y medicinas. Algunos productos requieren receta médica y se validan con un documento.</p>
+    </section>
+
+    <section id="clientHub" class="panel-card" style="display:none; margin-bottom:18px;">
+      <h2 id="clientHubTitle">Mi cuenta</h2>
+      <p id="clientHubSubtitle">Aquí puedes revisar tus compras y tu historial.</p>
+      <div style="display:grid; gap:14px;">
+        <div>
+          <h3 style="margin-bottom:8px;">Historial de compras</h3>
+          <ul id="ordersHistory" class="cart-list"></ul>
+        </div>
+      </div>
     </section>
 
     <div class="grid">
@@ -45,14 +57,14 @@
           <p>Fácil de usar en espacios reducidos.</p>
           <button onclick="addToCart(this)">Agregar al carrito</button>
         </article>
-        <article class="item locked" data-id="medX" data-name="Medicamento X" data-price="18000" data-locked="true">
-          <h3>Medicamento X</h3>
+        <article class="item locked" data-id="medX" data-name="Zolgensma (Onasemnogene abeparvovec)" data-price="18000" data-locked="true">
+          <h3>Zolgensma (Onasemnogene abeparvovec)</h3>
           <p>Precio: ₡18.000</p>
           <p>Necesita receta médica.</p>
           <button onclick="selectRecipe(this)">Subir receta</button>
         </article>
-        <article class="item locked" data-id="medY" data-name="Medicamento Y" data-price="27000" data-locked="true">
-          <h3>Medicamento Y</h3>
+        <article class="item locked" data-id="medY" data-name="Prialt (Ziconotida)" data-price="27000" data-locked="true">
+          <h3>Prialt (Ziconotida)</h3>
           <p>Precio: ₡27.000</p>
           <p>Necesita receta médica.</p>
           <button onclick="selectRecipe(this)">Subir receta</button>
@@ -83,7 +95,7 @@
         </div>
         <button class="checkout" onclick="checkout()">Pagar ahora</button>
         <p id="cartMessage" class="message"></p>
-        <div class="upload-area" id="uploadArea">
+        <div class="upload-area" id="uploadArea" style="display:none;">
           <h2 id="uploadTitle">Subir receta</h2>
           <p>Selecciona un archivo PDF o toma una foto desde la cámara.</p>
           <input id="recipeFile" type="file" accept="image/*,.pdf" capture="environment">
@@ -106,6 +118,16 @@
           <button type="submit">Registrarme</button>
         </form>
       </div>
+      <div class="footer-block footer-providers">
+        <h3>Proveedores aliados</h3>
+        <p>Conoce a las marcas que respaldan nuestras soluciones médicas.</p>
+        <ul class="provider-links">
+          <li><a href="https://www.medtronic.com" target="_blank" rel="noopener noreferrer">Medtronic <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.jnjmedtech.com" target="_blank" rel="noopener noreferrer">Johnson &amp; Johnson MedTech <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.siemens-healthineers.com" target="_blank" rel="noopener noreferrer">Siemens Healthineers <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.gehealthcare.com" target="_blank" rel="noopener noreferrer">GE HealthCare <span aria-hidden="true">↗</span></a></li>
+        </ul>
+      </div>
       <div class="footer-block">
         <h3>Contáctanos</h3>
         <p><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
@@ -115,13 +137,34 @@
     </div>
     <p class="footer-copy">&copy; 2026 Dali Medica — Página pública</p>
   </footer>
-
+  <script src="../../Pagina-JS/site-header.js"></script>
+  <script src="../../Pagina-JS/storage.js"></script>
+  <script src="../../Pagina-JS/Auth.js"></script>
   <script>
+    const session = obtenerSesion();
     const cart = JSON.parse(localStorage.getItem('dali_cart') || '[]');
     let currentRecipeProduct = null;
+    const orderHistoryKey = 'dali_orders';
+
+    const clientHub = document.getElementById('clientHub');
+    const clientHubTitle = document.getElementById('clientHubTitle');
+    const clientHubSubtitle = document.getElementById('clientHubSubtitle');
+    if (session && session.rol === 'cliente') {
+      clientHub.style.display = 'block';
+      clientHubTitle.textContent = `Hola, ${session.nombre}`;
+      clientHubSubtitle.textContent = 'Tus compras y tu historial quedan guardados en esta cuenta.';
+    }
 
     function saveCart(){
       localStorage.setItem('dali_cart', JSON.stringify(cart));
+    }
+
+    function saveOrders(orders) {
+      localStorage.setItem(orderHistoryKey, JSON.stringify(orders));
+    }
+
+    function getOrders() {
+      return JSON.parse(localStorage.getItem(orderHistoryKey) || '[]');
     }
 
     function formatPrice(value){
@@ -142,11 +185,29 @@
           total += item.price;
           const li = document.createElement('li');
           li.className = 'cart-row';
-          li.innerHTML = `<span>${item.name}</span><span>${formatPrice(item.price)} <button onclick="removeFromCart(${index})" class="remove-btn">Eliminar</button></span>`;
+          li.innerHTML = `<span>${item.name}</span><span>${formatPrice(item.price)} <button onclick="removeFromCart(${index})" class="remove-btn" style="background:#dc2626;color:#fff;border:none;padding:4px 10px;border-radius:4px;cursor:pointer;">Eliminar</button></span>`;
           cartItems.appendChild(li);
         });
       }
       totalElement.textContent = 'Total: ' + formatPrice(total);
+    }
+
+    function renderOrdersHistory() {
+      const ordersHistory = document.getElementById('ordersHistory');
+      if (!ordersHistory) return;
+      const orders = getOrders().filter(order => !session || order.usuario === session.usuario);
+      if (orders.length === 0) {
+        ordersHistory.innerHTML = '<li>No tienes compras registradas todavía.</li>';
+        return;
+      }
+      ordersHistory.innerHTML = '';
+      orders.slice().reverse().forEach(order => {
+        const li = document.createElement('li');
+        li.className = 'cart-row';
+        const items = order.items.map(item => item.name).join(', ');
+        li.innerHTML = `<span>${order.fecha} · ${items}</span><span>${formatPrice(order.total)} · ${order.metodo}</span>`;
+        ordersHistory.appendChild(li);
+      });
     }
 
     function addToCart(button){
@@ -237,13 +298,25 @@
       }
       cartMessage.style.color = 'green';
       cartMessage.textContent = 'Compra preparada. Método de pago: ' + selectedPayment.value + '.';
-      // Simulación de pago: limpiar carrito
+      const orders = getOrders();
+      orders.push({
+        id: Date.now().toString(),
+        usuario: session ? session.usuario : 'invitado',
+        nombre: session ? session.nombre : 'Invitado',
+        fecha: new Date().toLocaleString('es-CR'),
+        metodo: selectedPayment.value,
+        total: cart.reduce((sum, item) => sum + item.price, 0),
+        items: cart.map(item => ({ name: item.name, price: item.price }))
+      });
+      saveOrders(orders);
       cart.length = 0;
       saveCart();
       renderCart();
+      renderOrdersHistory();
     }
 
     renderCart();
+    renderOrdersHistory();
   </script>
 </body>
 </html>

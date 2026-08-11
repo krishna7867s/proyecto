@@ -4,43 +4,124 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Administrar - Dali Medica</title>
-  <style>body{font-family:Arial,Helvetica,sans-serif;margin:0}.container{padding:24px}header{display:flex;justify-content:space-between;padding:12px 20px;background:#eef6ff}.logo{font-weight:700;color:#1a73e8}</style>
+  <link rel="stylesheet" href="Pagina_privada-css/estilos.css">
 </head>
 <body>
   <header>
     <div class="logo">dali medica - privado</div>
     <nav>
-      <ul style="list-style:none;display:flex;margin:0;padding:0;">
+      <ul>
         <li><a href="dashboard.html">Volver</a></li>
       </ul>
     </nav>
   </header>
+
   <main class="container">
     <h1>Administrar</h1>
-    <p>Ajustes y administración general (placeholder).</p>
+    <p>Ajustes de perfil y configuración de cuenta.</p>
+
+    <form id="profileForm" class="panel-card admin-form">
+      <label for="profileName">Nombre completo</label>
+      <input id="profileName" type="text" required>
+
+      <label for="profileEmail">Correo electrónico</label>
+      <input id="profileEmail" type="email" required>
+
+      <label for="profilePassword">Nueva contraseña</label>
+      <div class="form-row-inline">
+        <input id="profilePassword" type="password" placeholder="Dejar en blanco para no cambiar">
+        <button type="button" id="togglePassword" class="btn-ghost">Mostrar</button>
+      </div>
+
+      <div style="margin-top:14px;">
+        <button type="submit" class="btn-primary">Actualizar perfil</button>
+      </div>
+    </form>
+
+    <p id="profileMessage" style="margin-top:12px;"></p>
   </main>
-  <footer style="margin-top:40px;padding:24px 20px;background:#eef6ff;border-top:1px solid #dce9f8;color:#555;">
-    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:flex-start;max-width:1200px;margin:0 auto;">
-      <div style="flex:1;min-width:260px;padding-left:8px;">
-        <h3 style="margin:0 0 10px;color:#1a73e8;">Suscríbete a noticias</h3>
-        <p style="margin:0 0 10px;">Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-block">
+        <h3>Suscríbete a noticias</h3>
+        <p>Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
         <form>
-          <label for="newsletter-email-admin" style="display:block;margin-bottom:6px;font-weight:600;">Correo electrónico</label>
-          <input id="newsletter-email-admin" type="email" placeholder="Tu correo" required style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;">
-          <button type="submit" style="margin-top:8px;padding:8px 12px;border:none;border-radius:6px;background:#1a73e8;color:#fff;cursor:pointer;">Registrarme</button>
+          <label for="newsletter-email-admin">Correo electrónico</label>
+          <input id="newsletter-email-admin" type="email" placeholder="Tu correo" required>
+          <button type="submit">Registrarme</button>
         </form>
       </div>
-      <div style="flex:1;min-width:260px;">
-        <h3 style="margin:0 0 10px;color:#1a73e8;">Contáctanos</h3>
-        <p style="margin:0 0 6px;"><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
-        <p style="margin:0 0 6px;"><strong>Correo:</strong> contacto@dalimedica.com</p>
-        <p style="margin:0;">Centro Médico Dali Medica · San José, Costa Rica</p>
+      <div class="footer-block">
+        <h3>Contáctanos</h3>
+        <p><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
+        <p><strong>Correo:</strong> contacto@dalimedica.com</p>
+        <p>Centro Médico Dali Medica · San José, Costa Rica</p>
       </div>
     </div>
-    <p style="text-align:center;margin:16px 0 0;padding-top:12px;border-top:1px solid #dce9f8;">&copy; 2026 Dali Medica — Área privada</p>
+    <p class="footer-copy">&copy; 2026 Dali Medica — Área privada</p>
   </footer>
+
   <script src="../../Pagina-JS/storage.js"></script>
-  <script src="../../Pagina-JS/auth.js"></script>
-  <script>verificarSesion();</script>
+  <script src="../../Pagina-JS/Auth.js"></script>
+  <script src="../../Pagina-JS/site-header.js"></script>
+  <script>
+    verificarSesion(['admin']);
+
+    const sesion = obtenerSesion();
+    const usuarios = getData('usuarios');
+    const usuarioActual = usuarios.find(u => u.usuario === sesion.usuario);
+
+    if (usuarioActual) {
+      document.getElementById('profileName').value = usuarioActual.nombre || '';
+      document.getElementById('profileEmail').value = usuarioActual.email || '';
+    }
+
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nombre = document.getElementById('profileName').value.trim();
+      const email = document.getElementById('profileEmail').value.trim();
+      const password = document.getElementById('profilePassword').value.trim();
+
+      if (!nombre || !email) {
+        document.getElementById('profileMessage').style.color = 'red';
+        document.getElementById('profileMessage').textContent = 'Nombre y correo son obligatorios.';
+        return;
+      }
+
+      const usuarioIndex = usuarios.findIndex(u => u.usuario === sesion.usuario);
+      if (usuarioIndex !== -1) {
+        usuarios[usuarioIndex].nombre = nombre;
+        usuarios[usuarioIndex].email = email;
+        if (password) {
+          usuarios[usuarioIndex].password = password;
+        }
+        saveData('usuarios', usuarios);
+        
+        // Actualizar sesión
+        const nuevaSesion = { ...sesion, nombre: nombre };
+        saveData('sesion', nuevaSesion);
+
+        document.getElementById('profileMessage').style.color = 'green';
+        document.getElementById('profileMessage').textContent = 'Perfil actualizado correctamente.';
+        mostrarInfoUsuario();
+      }
+    });
+
+    // Toggle password visibility
+    const toggle = document.getElementById('togglePassword');
+    const pwd = document.getElementById('profilePassword');
+    if (toggle && pwd) {
+      toggle.addEventListener('click', function() {
+        if (pwd.type === 'password') {
+          pwd.type = 'text';
+          toggle.textContent = 'Ocultar';
+        } else {
+          pwd.type = 'password';
+          toggle.textContent = 'Mostrar';
+        }
+      });
+    }
+  </script>
 </body>
 </html>

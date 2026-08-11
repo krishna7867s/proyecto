@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Contactos - Dali Medica</title>
-  <link rel="stylesheet" href="../Pagina-css/estilos.css">
+  <link rel="stylesheet" href="Pagina-css/estilos.css">
 </head>
 <body>
   <header>
@@ -19,18 +19,63 @@
       </ul>
     </nav>
   </header>
+
   <main class="container">
-    <h1>Contáctanos</h1>
-    <form onsubmit="event.preventDefault();alert('Mensaje enviado (demo)')">
-      <label for="contact-name">Nombre</label>
-      <input id="contact-name" required>
-      <label for="contact-email">Correo</label>
-      <input id="contact-email" type="email" required>
-      <label for="contact-message">Mensaje</label>
-      <textarea id="contact-message" rows="5" required></textarea>
-      <button>Enviar</button>
-    </form>
+    <section class="contact-header">
+      <h1>¿Necesitas atención personalizada?</h1>
+      <p>Ponte en contacto con nuestro equipo especializado para soporte de pedidos, cotizaciones institucionales o consultas normativas.</p>
+    </section>
+
+    <div class="contact-grid">
+      <div class="contact-info">
+        <article class="info-card">
+          <div class="info-icon">📍</div>
+          <div class="info-content">
+            <h3>Ubicación Central</h3>
+            <p>San José, Costa Rica — Atención a centros médicos y clínicas en todo el país.</p>
+          </div>
+        </article>
+
+        <article class="info-card">
+          <div class="info-icon">📧</div>
+          <div class="info-content">
+            <h3>Correo Electrónico</h3>
+            <p>soporte@dalimedica.cr<br>ventas@dalimedica.cr</p>
+          </div>
+        </article>
+
+        <article class="info-card">
+          <div class="info-icon">⚡</div>
+          <div class="info-content">
+            <h3>Atención Inmediata</h3>
+            <p>Soporte digital disponible 24/7 para gestión de pedidos e insumos urgentes.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="contact-form-container">
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="contact-name">Nombre Completo</label>
+            <input id="contact-name" placeholder="Ej. Dr. Carlos Mendoza" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-email">Correo Electrónico</label>
+            <input id="contact-email" type="email" placeholder="ejemplo@clinica.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contact-message">Mensaje o Consulta</label>
+            <textarea id="contact-message" rows="5" placeholder="Escribe aquí los detalles de tu consulta o requerimiento..." required></textarea>
+          </div>
+
+          <button type="submit">Enviar Mensaje</button>
+        </form>
+      </div>
+    </div>
   </main>
+
   <footer>
     <div class="footer-content">
       <div class="footer-block">
@@ -42,6 +87,16 @@
           <button type="submit">Registrarme</button>
         </form>
       </div>
+      <div class="footer-block footer-providers">
+        <h3>Proveedores aliados</h3>
+        <p>Conoce a las marcas que respaldan nuestras soluciones médicas.</p>
+        <ul class="provider-links">
+          <li><a href="https://www.medtronic.com" target="_blank" rel="noopener noreferrer">Medtronic <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.jnjmedtech.com" target="_blank" rel="noopener noreferrer">Johnson &amp; Johnson MedTech <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.siemens-healthineers.com" target="_blank" rel="noopener noreferrer">Siemens Healthineers <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.gehealthcare.com" target="_blank" rel="noopener noreferrer">GE HealthCare <span aria-hidden="true">↗</span></a></li>
+        </ul>
+      </div>
       <div class="footer-block">
         <h3>Contáctanos</h3>
         <p><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
@@ -51,5 +106,23 @@
     </div>
     <p class="footer-copy">&copy; 2026 Dali Medica — Página pública</p>
   </footer>
+  <script src="../../Pagina-JS/site-header.js"></script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const msg = 'Mensaje enviado (demo)';
+      if (typeof showAlert === 'function') {
+        showAlert(msg);
+      } else {
+        const overlay = document.createElement('div');
+        overlay.style = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:99999;';
+        const box = document.createElement('div'); box.style='max-width:420px;padding:16px;border-radius:10px;background:#fff;color:#021020;';
+        const m = document.createElement('div'); m.style.marginBottom='12px'; m.textContent = msg;
+        const btn = document.createElement('button'); btn.textContent='Aceptar'; btn.style.padding='8px 12px'; btn.addEventListener('click', ()=>{ document.body.removeChild(overlay); });
+        box.appendChild(m); box.appendChild(btn); overlay.appendChild(box); document.body.appendChild(overlay);
+      }
+      this.reset();
+    });
+  </script>
 </body>
 </html>

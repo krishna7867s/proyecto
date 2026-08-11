@@ -4,22 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Productos Admin - Dali Medica</title>
-  <style>
-    body{font-family:Arial,Helvetica,sans-serif;margin:0}
-    header{display:flex;justify-content:space-between;padding:12px 20px;background:#eef6ff}
-    .logo{font-weight:700;color:#1a73e8}
-    nav ul{list-style:none;display:flex;margin:0;padding:0}
-    nav li{margin-right:12px}
-    nav a{text-decoration:none;color:#333}
-    .container{padding:24px}
-    form{max-width:700px;margin-bottom:24px}
-    label{display:block;margin:10px 0 4px}
-    input,select,textarea{width:100%;padding:8px;border:1px solid #ccc;border-radius:6px}
-    button{margin-top:12px;padding:10px 16px;border:none;border-radius:6px;background:#1a73e8;color:#fff;cursor:pointer}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:12px;border:1px solid #ddd;text-align:left}
-    .actions button{margin-right:8px;background:#5f6368}
-  </style>
+  <link rel="stylesheet" href="Pagina_privada-css/estilos.css">
 </head>
 <body>
   <header>
@@ -30,13 +15,15 @@
       </ul>
     </nav>
   </header>
+
   <main class="container">
     <h1>Productos Admin</h1>
     <p>Registra, consulta, edita y elimina productos del inventario.</p>
-    <form id="productForm">
+
+    <form id="productForm" class="panel-form">
       <input type="hidden" id="productId">
       <label for="productName">Nombre del producto</label>
-      <input id="productName" required>
+      <input id="productName" type="text" required>
       <label for="productType">Tipo</label>
       <select id="productType" required>
         <option value="">Selecciona tipo</option>
@@ -56,37 +43,51 @@
       <textarea id="productDescription" rows="3"></textarea>
       <button type="submit">Guardar producto</button>
     </form>
-    <input id="searchProduct" type="search" placeholder="Buscar producto">
+
+    <div class="csv-import-section">
+      <label for="csvFileInput">Importar desde CSV</label>
+      <div class="csv-import-row">
+        <input id="csvFileInput" type="file" accept=".csv">
+        <a href="productos-ejemplo.csv" download class="csv-sample-link">Descargar ejemplo CSV</a>
+      </div>
+    </div>
+
+    <input id="searchProduct" class="search-input" type="search" placeholder="Buscar producto">
+
     <table>
       <thead>
         <tr><th>Nombre</th><th>Tipo</th><th>Precio</th><th>Receta</th><th>Descripción</th><th>Acciones</th></tr>
       </thead>
       <tbody id="productList"></tbody>
     </table>
+
     <div id="paginationControls"></div>
   </main>
-  <footer style="margin-top:40px;padding:24px 20px;background:#eef6ff;border-top:1px solid #dce9f8;color:#555;">
-    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:flex-start;max-width:1200px;margin:0 auto;">
-      <div style="flex:1;min-width:260px;padding-left:8px;">
-        <h3 style="margin:0 0 10px;color:#1a73e8;">Suscríbete a noticias</h3>
-        <p style="margin:0 0 10px;">Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-block">
+        <h3>Suscríbete a noticias</h3>
+        <p>Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
         <form>
-          <label for="newsletter-email-productos-admin" style="display:block;margin-bottom:6px;font-weight:600;">Correo electrónico</label>
-          <input id="newsletter-email-productos-admin" type="email" placeholder="Tu correo" required style="width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box;">
-          <button type="submit" style="margin-top:8px;padding:8px 12px;border:none;border-radius:6px;background:#1a73e8;color:#fff;cursor:pointer;">Registrarme</button>
+          <label for="newsletter-email-productos-admin">Correo electrónico</label>
+          <input id="newsletter-email-productos-admin" type="email" placeholder="Tu correo" required>
+          <button type="submit">Registrarme</button>
         </form>
       </div>
-      <div style="flex:1;min-width:260px;">
-        <h3 style="margin:0 0 10px;color:#1a73e8;">Contáctanos</h3>
-        <p style="margin:0 0 6px;"><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
-        <p style="margin:0 0 6px;"><strong>Correo:</strong> contacto@dalimedica.com</p>
-        <p style="margin:0;">Centro Médico Dali Medica · San José, Costa Rica</p>
+      <div class="footer-block">
+        <h3>Contáctanos</h3>
+        <p><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
+        <p><strong>Correo:</strong> contacto@dalimedica.com</p>
+        <p>Centro Médico Dali Medica · San José, Costa Rica</p>
       </div>
     </div>
-    <p style="text-align:center;margin:16px 0 0;padding-top:12px;border-top:1px solid #dce9f8;">&copy; 2026 Dali Medica — Área privada</p>
+    <p class="footer-copy">&copy; 2026 Dali Medica — Área privada</p>
   </footer>
+
   <script src="../../Pagina-JS/storage.js"></script>
-  <script src="../../Pagina-JS/auth.js"></script>
+  <script src="../../Pagina-JS/Auth.js"></script>
+  <script src="../../Pagina-JS/site-header.js"></script>
   <script src="../../Pagina-JS/productos.js"></script>
 </body>
 </html>
