@@ -795,7 +795,8 @@ button:hover {
   outline: none;
   box-sizing: border-box;
   caret-color: var(--accent-cyan);
-  -webkit-text-fill-color: #ffffff;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
 }
 
 .page input[type="text"]::placeholder,
@@ -807,9 +808,10 @@ button:hover {
 .page input[type="text"]:-webkit-autofill,
 .page input[type="email"]:-webkit-autofill,
 .page input[type="password"]:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px rgba(3, 7, 18, 0.96) inset;
-  box-shadow: 0 0 0 1000px rgba(3, 7, 18, 0.96) inset;
-  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px rgba(3, 7, 18, 0.96) inset !important;
+  box-shadow: 0 0 0 1000px rgba(3, 7, 18, 0.96) inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
   caret-color: var(--accent-cyan);
   transition: background-color 9999s ease-in-out 0s;
 }
@@ -817,8 +819,10 @@ button:hover {
 .page input[type="text"]:-webkit-autofill:focus,
 .page input[type="email"]:-webkit-autofill:focus,
 .page input[type="password"]:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px rgba(3, 7, 18, 0.96) inset, 0 0 15px rgba(0, 199, 253, 0.25);
-  box-shadow: 0 0 0 1000px rgba(3, 7, 18, 0.96) inset, 0 0 15px rgba(0, 199, 253, 0.25);
+  -webkit-box-shadow: 0 0 0 1000px rgba(3, 7, 18, 0.96) inset, 0 0 15px rgba(0, 199, 253, 0.25) !important;
+  box-shadow: 0 0 0 1000px rgba(3, 7, 18, 0.96) inset, 0 0 15px rgba(0, 199, 253, 0.25) !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
 }
 
 .password-field {
@@ -1294,4 +1298,41 @@ footer .footer-block p {
   .provider-links {
     grid-template-columns: 1fr;
   }
+}
+
+
+/* ==========================================================
+   FIX FINAL LOGIN - TEXTO BLANCO / AUTOFILL BRAVE-CHROME
+   ========================================================== */
+.page.auth-card #usuario,
+.page.auth-card #password,
+.page.auth-card #usuario[type="text"],
+.page.auth-card #password[type="password"],
+.page.auth-card #password[type="text"] {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #00c7fd !important;
+  background-color: #030712 !important;
+}
+
+.page.auth-card #usuario:-webkit-autofill,
+.page.auth-card #usuario:-webkit-autofill:hover,
+.page.auth-card #usuario:-webkit-autofill:focus,
+.page.auth-card #usuario:-webkit-autofill:active,
+.page.auth-card #password:-webkit-autofill,
+.page.auth-card #password:-webkit-autofill:hover,
+.page.auth-card #password:-webkit-autofill:focus,
+.page.auth-card #password:-webkit-autofill:active {
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
+  caret-color: #00c7fd !important;
+  -webkit-box-shadow: 0 0 0 1000px #030712 inset !important;
+  box-shadow: 0 0 0 1000px #030712 inset !important;
+  background-color: #030712 !important;
+}
+
+.page.auth-card #usuario::selection,
+.page.auth-card #password::selection {
+  color: #ffffff !important;
+  background: rgba(0, 199, 253, 0.35) !important;
 }
