@@ -26,6 +26,13 @@ function inicializarUsuarios() {
     if (!existentes.has(key)) {
       usuarios.push(seed);
       cambio = true;
+    } else {
+      // Corrige datos viejos si el rol quedó desactualizado
+      const existente = existentes.get(key);
+      if (existente.rol !== seed.rol) {
+        existente.rol = seed.rol;
+        cambio = true;
+      }
     }
   });
 
