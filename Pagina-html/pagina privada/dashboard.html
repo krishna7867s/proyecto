@@ -62,41 +62,6 @@
       padding: 4px 20px 20px;
     }
 
-    /* Lista de servicios */
-    .service-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .service-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      background: rgba(0,199,253,0.04);
-      border: 1px solid rgba(0,199,253,0.08);
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-    .service-list li .s-icon {
-      font-size: 1.3rem;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-    .service-list li strong {
-      display: block;
-      color: var(--admin-text);
-      margin-bottom: 2px;
-    }
-    .service-list li span {
-      color: var(--admin-text-muted);
-      font-size: 0.82rem;
-    }
-
     /* Solicitud de vacaciones */
     .vac-form {
       display: flex;
@@ -225,7 +190,6 @@
     }
 
     @media (max-width: 680px) {
-      .service-list { grid-template-columns: 1fr; }
       .vac-form .form-row { grid-template-columns: 1fr; }
     }
   </style>
@@ -290,77 +254,7 @@
       <!-- ── Sección EMPLEADO: acordeones ── -->
       <div class="employee-sections" id="employeeSection" style="display:none;">
 
-        <!-- 1. Servicios de la empresa -->
-        <div class="acc-block">
-          <button class="acc-btn" data-target="panelServicios">
-            <span><span class="acc-icon">🏥</span>Servicios de Dali Medica</span>
-            <svg class="acc-chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-          <div class="acc-body" id="panelServicios">
-            <div class="acc-inner">
-              <ul class="service-list">
-                <li>
-                  <span class="s-icon">🔧</span>
-                  <div>
-                    <strong>Mantenimiento de Equipos</strong>
-                    <span>Revisión preventiva y correctiva de equipos médicos: monitores, ventiladores, bombas de infusión y más.</span>
-                  </div>
-                </li>
-                <li>
-                  <span class="s-icon">🩺</span>
-                  <div>
-                    <strong>Calibración de Dispositivos</strong>
-                    <span>Ajuste y certificación de equipos de diagnóstico: tensiómetros, glucómetros, oxímetros y electrocardiógrafos.</span>
-                  </div>
-                </li>
-                <li>
-                  <span class="s-icon">🚑</span>
-                  <div>
-                    <strong>Instalación de Equipos</strong>
-                    <span>Puesta en marcha de equipos nuevos con capacitación al personal clínico y pruebas de funcionamiento.</span>
-                  </div>
-                </li>
-                <li>
-                  <span class="s-icon">📦</span>
-                  <div>
-                    <strong>Gestión de Insumos</strong>
-                    <span>Control de inventario de insumos desechables: guantes, jeringas, catéteres y materiales de curación.</span>
-                  </div>
-                </li>
-                <li>
-                  <span class="s-icon">💊</span>
-                  <div>
-                    <strong>Distribución de Medicamentos</strong>
-                    <span>Entrega controlada de medicamentos con cadena de frío y trazabilidad por lote y fecha de vencimiento.</span>
-                  </div>
-                </li>
-                <li>
-                  <span class="s-icon">🛡️</span>
-                  <div>
-                    <strong>Soporte Técnico Especializado</strong>
-                    <span>Atención de averías en equipos de imagen: ultrasonido, rayos X y endoscopios con respaldo de fábrica.</span>
-                  </div>
-                </li>
-                <li>
-                  <span class="s-icon">📋</span>
-                  <div>
-                    <strong>Auditoría de Inventario</strong>
-                    <span>Verificación periódica del stock físico contra registros del sistema para detectar diferencias.</span>
-                  </div>
-                </li>
-                <li>
-                  <span class="s-icon">🔬</span>
-                  <div>
-                    <strong>Asesoría en Prótesis</strong>
-                    <span>Orientación clínica y logística para la selección y entrega de prótesis e implantes ortopédicos.</span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Solicitar vacaciones -->
+        <!-- 1. Solicitar vacaciones -->
         <div class="acc-block">
           <button class="acc-btn" data-target="panelVacaciones">
             <span><span class="acc-icon">🌴</span>Solicitar vacaciones</span>
@@ -399,7 +293,7 @@
           </div>
         </div>
 
-        <!-- 3. Mis solicitudes -->
+        <!-- 2. Mis solicitudes -->
         <div class="acc-block">
           <button class="acc-btn" data-target="panelMisSolicitudes">
             <span><span class="acc-icon">📄</span>Mis solicitudes</span>
@@ -414,7 +308,7 @@
           </div>
         </div>
 
-        <!-- 4. Avisos internos -->
+        <!-- 3. Avisos internos -->
         <div class="acc-block">
           <button class="acc-btn" data-target="panelAvisos">
             <span><span class="acc-icon">📢</span>Avisos internos</span>
@@ -456,7 +350,7 @@
           </div>
         </div>
 
-        <!-- 5. Ir al calendario -->
+        <!-- 4. Ir al calendario -->
         <div class="acc-block">
           <button class="acc-btn" onclick="window.location.href='horarios.html'" style="justify-content:flex-start; gap:10px;">
             <span><span class="acc-icon">📅</span>Ir a mi calendario y horarios</span>
@@ -523,7 +417,7 @@
         employeeSection.style.display = 'none';
       } else {
         // Empleado
-        dashboardRoleInfo.textContent = 'Vista operativa de empleado: servicios, solicitudes, avisos y calendario.';
+        dashboardRoleInfo.textContent = 'Vista operativa de empleado: solicitudes, avisos y calendario.';
         adminSection.style.display = 'none';
         employeeSection.style.display = '';
         adminOnly.forEach(el => {
