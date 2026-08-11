@@ -4,7 +4,7 @@
  */
 
 // 1. Verificación de Seguridad (RBAC)
-verificarSesion(['empleado', 'admin']);
+verificarSesion(['admin']);
 
 // 2. Elementos del DOM
 const clientForm = document.getElementById("clientForm");
@@ -16,6 +16,7 @@ const inputPhone = document.getElementById("clientPhone");
 const inputNotes = document.getElementById("clientNotes");
 const searchInput = document.getElementById("searchClient");
 const paginationControls = document.getElementById("paginationControls");
+const csvFileInput = document.getElementById('csvFileInput');
 
 // 3. Estado
 let currentPage = 1;
@@ -24,6 +25,21 @@ let currentSearch = "";
 let pendingDeleteId = null;
 let undoTimeout = null;
 let editingRowId = null;
+
+// Inline modalAlert fallback if global showAlert not available
+function modalAlertLocal(message) {
+    if (typeof showAlert === 'function') return showAlert(message);
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.style = 'position:fixed;inset:0;background:rgba(2,6,23,0.6);display:flex;align-items:center;justify-content:center;z-index:99999;';
+        const box = document.createElement('div');
+        box.style = 'max-width:420px;padding:16px;border-radius:10px;background:#071226;color:#fff;border:1px solid rgba(255,255,255,0.04);';
+        const msg = document.createElement('div'); msg.style.marginBottom='12px'; msg.textContent = message;
+        const btn = document.createElement('button'); btn.textContent='Aceptar'; btn.style.padding='8px 12px'; btn.style.background='#00b4ff'; btn.style.border='none'; btn.style.color='#021020';
+        box.appendChild(msg); box.appendChild(btn); overlay.appendChild(box); document.body.appendChild(overlay);
+        btn.addEventListener('click', ()=>{ document.body.removeChild(overlay); resolve(); });
+    });
+}
 
 // 4. Utilidad: Debounce
 function debounce(func, delay) {
@@ -68,7 +84,7 @@ function renderClients() {
         const row = document.createElement("tr");
         row.dataset.id = cliente.id;
 
-        if (editingRowId === cliente.id) {
+        if (String(editingRowId) === String(cliente.id)) {
             row.innerHTML = `
                 <td><input type="text" id="edit-name-${cliente.id}" value="${escapeHtml(cliente.name)}" style="width:100%;padding:4px;"></td>
                 <td><input type="email" id="edit-email-${cliente.id}" value="${escapeHtml(cliente.email)}" style="width:100%;padding:4px;"></td>
@@ -145,6 +161,33 @@ function cancelInlineEdit() {
     renderClients();
 }
 
+if (csvFileInput) {
+    csvFileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        parseCsvFile(file, ['name','email','phone','notes'])
+            .then(rows => {
+                const imported = rows.map(row => ({
+                    id: Date.now().toString() + Math.random().toString(16).slice(2),
+                    name: row.name || '',
+                    email: row.email || '',
+                    phone: row.phone || '',
+                    notes: row.notes || ''
+                })).filter(item => item.name && item.email);
+                const existing = getData('clientes');
+                saveData('clientes', existing.concat(imported));
+                renderClients();
+            })
+            .catch(err => {
+                console.error(err);
+                modalAlertLocal('Error al cargar el CSV: ' + err.message);
+            })
+            .finally(() => {
+                csvFileInput.value = '';
+            });
+    });
+}
+
 function saveInlineEdit(id) {
     const name = document.getElementById(`edit-name-${id}`).value.trim();
     const email = document.getElementById(`edit-email-${id}`).value.trim();
@@ -153,13 +196,13 @@ function saveInlineEdit(id) {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        alert("Error: Por favor ingresa un correo válido.");
+        modalAlertLocal("Error: Por favor ingresa un correo válido.");
         return;
     }
 
     const phoneRegex = /^[0-9+\-()\s]+$/;
     if (!phoneRegex.test(phone)) {
-        alert("Error: El teléfono solo puede contener números, espacios, paréntesis y guiones.");
+        modalAlertLocal("Error: El teléfono solo puede contener números, espacios, paréntesis y guiones.");
         return;
     }
 
@@ -167,7 +210,6 @@ function saveInlineEdit(id) {
     editingRowId = null;
     renderClients();
 }
-
 
 // Variable global para tracking del toast activo
 let activeToast = null;
@@ -254,13 +296,13 @@ if (clientForm) {
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            alert("Error: Por favor ingresa un correo válido (ej. juan@gmail.com).");
+            modalAlertLocal("Error: Por favor ingresa un correo válido (ej. juan@gmail.com).");
             return;
         }
 
         const phoneRegex = /^[0-9+\-()\s]+$/;
         if (!phoneRegex.test(phone)) {
-            alert("Error: El teléfono solo puede contener números, espacios, paréntesis y guiones.");
+            modalAlertLocal("Error: El teléfono solo puede contener números, espacios, paréntesis y guiones.");
             return;
         }
 
@@ -276,9 +318,39 @@ if (clientForm) {
         clientForm.reset();
         inputId.value = "";
         renderClients();
+        // focus en nombre para nuevo registro
+        const nameEl = document.getElementById('clientName');
+        if (nameEl) nameEl.focus();
     });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     renderClients();
+
+    const params = new URLSearchParams(window.location.search);
+    const editId = params.get('edit');
+    if (editId) {
+        const clientes = getData('clientes');
+        if (clientes.some(c => c.id === editId || String(c.id) === String(editId))) {
+            editingRowId = editId;
+            renderClients();
+            setTimeout(() => {
+                const input = document.getElementById(`edit-name-${editId}`);
+                if (input) input.focus();
+            }, 10);
+            history.replaceState(null, document.title, window.location.pathname);
+        }
+    }
+
+    const resetBtn = document.getElementById('resetClient');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function() {
+            clientForm.reset();
+            inputId.value = '';
+            editingRowId = null;
+            const nameEl = document.getElementById('clientName');
+            if (nameEl) nameEl.focus();
+            renderClients();
+        });
+    }
 });

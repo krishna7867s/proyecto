@@ -17,32 +17,57 @@
   </header>
 
   <main class="container">
-    <h1>Clientes</h1>
-    <p>Registra y administra clientes desde este formulario.</p>
+    <div class="admin-panel">
+      <h1>Clientes</h1>
+      <p class="welcome">Registra y administra clientes desde este formulario.</p>
 
-    <form id="clientForm">
-      <input type="hidden" id="clientId">
-      <label for="clientName">Nombre</label>
-      <input id="clientName" required>
-      <label for="clientEmail">Correo</label>
-      <input id="clientEmail" type="email" required>
-      <label for="clientPhone">Teléfono</label>
-      <input id="clientPhone" required>
-      <label for="clientNotes">Notas</label>
-      <textarea id="clientNotes" rows="3"></textarea>
-      <button type="submit">Guardar cliente</button>
-    </form>
+      <form id="clientForm" class="panel-form">
+        <input type="hidden" id="clientId">
+        <div class="form-row">
+          <div class="col">
+            <label for="clientName">Nombre</label>
+            <input id="clientName" type="text" required>
+          </div>
+          <div class="col">
+            <label for="clientPhone">Teléfono</label>
+            <input id="clientPhone" type="text" required>
+          </div>
+        </div>
+        <label for="clientEmail">Correo</label>
+        <input id="clientEmail" type="email" required>
 
-    <input id="searchClient" type="search" placeholder="Buscar cliente">
+        <label for="clientNotes">Notas</label>
+        <textarea id="clientNotes" rows="3"></textarea>
 
-    <table>
-      <thead>
-        <tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Notas</th><th>Acciones</th></tr>
-      </thead>
-      <tbody id="clientList"></tbody>
-    </table>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:14px;">
+          <button type="submit">Guardar cliente</button>
+          <button type="button" id="resetClient" class="danger">Limpiar</button>
+        </div>
+      </form>
 
-    <div id="paginationControls"></div>
+      <div class="csv-import-section">
+        <label for="csvFileInput">Importar desde CSV</label>
+        <div class="csv-import-row">
+          <input id="csvFileInput" type="file" accept=".csv">
+          <a href="clientes-ejemplo.csv" download class="csv-sample-link">Descargar ejemplo CSV</a>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;">
+        <input id="searchClient" class="search-input" type="search" placeholder="Buscar cliente">
+      </div>
+
+      <div style="margin-top:16px; overflow:auto;">
+        <table class="striped">
+          <thead>
+            <tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Notas</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="clientList"></tbody>
+        </table>
+      </div>
+
+      <div id="paginationControls"></div>
+    </div>
   </main>
 
   <footer>
@@ -68,6 +93,7 @@
 
   <script src="../../Pagina-JS/storage.js"></script>
   <script src="../../Pagina-JS/Auth.js"></script>
+    <script src="../../Pagina-JS/site-header.js"></script>
   <script src="../../Pagina-JS/clientes.js"></script>
 </body>
 </html>

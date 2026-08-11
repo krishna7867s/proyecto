@@ -17,34 +17,61 @@
   </header>
 
   <main class="container">
-    <h1>Proveedores</h1>
-    <p>Registra, consulta, edita y elimina proveedores de la cadena de suministro.</p>
+    <div class="admin-panel">
+      <h1>Proveedores</h1>
+      <p class="welcome">Registra, consulta, edita y elimina proveedores de la cadena de suministro.</p>
 
-    <form id="providerForm">
-      <input type="hidden" id="providerId">
-      <label for="providerName">Nombre de la empresa</label>
-      <input id="providerName" required>
-      <label for="providerContact">Contacto</label>
-      <input id="providerContact" required>
-      <label for="providerEmail">Correo electrónico</label>
-      <input id="providerEmail" type="email" required>
-      <label for="providerPhone">Teléfono</label>
-      <input id="providerPhone" required>
-      <label for="providerNotes">Notas</label>
-      <textarea id="providerNotes" rows="3"></textarea>
-      <button type="submit">Guardar proveedor</button>
-    </form>
+      <form id="providerForm" class="panel-form">
+        <input type="hidden" id="providerId">
+        <div class="form-row">
+          <div class="col">
+            <label for="providerName">Nombre de la empresa</label>
+            <input id="providerName" type="text" required>
+          </div>
+          <div class="col">
+            <label for="providerContact">Contacto</label>
+            <input id="providerContact" type="text" required>
+          </div>
+        </div>
 
-    <input id="searchProvider" type="search" placeholder="Buscar proveedor">
+        <label for="providerEmail">Correo electrónico</label>
+        <input id="providerEmail" type="email" required>
 
-    <table>
-      <thead>
-        <tr><th>Empresa</th><th>Contacto</th><th>Correo</th><th>Teléfono</th><th>Notas</th><th>Acciones</th></tr>
-      </thead>
-      <tbody id="providerList"></tbody>
-    </table>
+        <label for="providerPhone">Teléfono</label>
+        <input id="providerPhone" type="text" required>
 
-    <div id="paginationControls"></div>
+        <label for="providerNotes">Notas</label>
+        <textarea id="providerNotes" rows="3"></textarea>
+
+        <div style="display:flex;gap:12px;align-items:center;margin-top:14px;">
+          <button type="submit">Guardar proveedor</button>
+          <button type="button" id="resetProvider" class="danger">Limpiar</button>
+        </div>
+      </form>
+
+      <div class="csv-import-section">
+        <label for="csvFileInput">Importar desde CSV</label>
+        <div class="csv-import-row">
+          <input id="csvFileInput" type="file" accept=".csv">
+          <a href="proveedores-ejemplo.csv" download class="csv-sample-link">Descargar ejemplo CSV</a>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;">
+        <input id="searchProvider" class="search-input" type="search" placeholder="Buscar proveedor">
+      </div>
+
+      <div style="margin-top:16px; overflow:auto;">
+        <table class="striped">
+          <thead>
+            <tr><th>Empresa</th><th>Contacto</th><th>Correo</th><th>Teléfono</th><th>Notas</th><th>Acciones</th></tr>
+          </thead>
+          <tbody id="providerList"></tbody>
+        </table>
+      </div>
+
+      <div id="paginationControls"></div>
+    </div>
   </main>
 
   <footer>
@@ -70,6 +97,7 @@
 
   <script src="../../Pagina-JS/storage.js"></script>
   <script src="../../Pagina-JS/Auth.js"></script>
+  <script src="../../Pagina-JS/site-header.js"></script>
   <script src="../../Pagina-JS/proveedores.js"></script>
 </body>
 </html>

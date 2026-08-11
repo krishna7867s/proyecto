@@ -20,7 +20,7 @@
     <h1>Administrar</h1>
     <p>Ajustes de perfil y configuración de cuenta.</p>
 
-    <form id="profileForm">
+    <form id="profileForm" class="panel-card admin-form">
       <label for="profileName">Nombre completo</label>
       <input id="profileName" type="text" required>
 
@@ -28,9 +28,14 @@
       <input id="profileEmail" type="email" required>
 
       <label for="profilePassword">Nueva contraseña</label>
-      <input id="profilePassword" type="password" placeholder="Dejar en blanco para no cambiar">
+      <div class="form-row-inline">
+        <input id="profilePassword" type="password" placeholder="Dejar en blanco para no cambiar">
+        <button type="button" id="togglePassword" class="btn-ghost">Mostrar</button>
+      </div>
 
-      <button type="submit">Actualizar perfil</button>
+      <div style="margin-top:14px;">
+        <button type="submit" class="btn-primary">Actualizar perfil</button>
+      </div>
     </form>
 
     <p id="profileMessage" style="margin-top:12px;"></p>
@@ -59,8 +64,9 @@
 
   <script src="../../Pagina-JS/storage.js"></script>
   <script src="../../Pagina-JS/Auth.js"></script>
+  <script src="../../Pagina-JS/site-header.js"></script>
   <script>
-    verificarSesion(['admin', 'empleado']);
+    verificarSesion(['admin']);
 
     const sesion = obtenerSesion();
     const usuarios = getData('usuarios');
@@ -101,6 +107,21 @@
         mostrarInfoUsuario();
       }
     });
+
+    // Toggle password visibility
+    const toggle = document.getElementById('togglePassword');
+    const pwd = document.getElementById('profilePassword');
+    if (toggle && pwd) {
+      toggle.addEventListener('click', function() {
+        if (pwd.type === 'password') {
+          pwd.type = 'text';
+          toggle.textContent = 'Ocultar';
+        } else {
+          pwd.type = 'password';
+          toggle.textContent = 'Mostrar';
+        }
+      });
+    }
   </script>
 </body>
 </html>

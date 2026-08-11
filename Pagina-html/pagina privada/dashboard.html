@@ -10,30 +10,34 @@
   <header>
     <div class="logo">dali medica - privado</div>
     <nav>
-      <ul>
-        <li><a href="clientes.html">Clientes</a></li>
-        <li><a href="proveedores.html">Proveedores</a></li>
-        <li><a href="productos-admin.html">Productos</a></li>
+      <ul id="dashboardNav">
+        <li><a href="clientes.html" data-admin-only>Clientes</a></li>
+        <li><a href="proveedores.html" data-admin-only>Proveedores</a></li>
+        <li><a href="productos-admin.html" data-admin-only>Productos</a></li>
         <li><a href="horarios.html">Horarios</a></li>
-        <li><a href="administrar.html">Administrar</a></li>
+        <li><a href="administrar.html" data-admin-only>Administrar</a></li>
         <li><a href="#" id="logout">Cerrar sesión</a></li>
       </ul>
     </nav>
   </header>
 
   <main class="container">
-    <h1>Panel de administración</h1>
-    <p>Bienvenido, <span id="nombreUsuario"></span></p>
-    <section>
+    <div class="admin-panel">
+      <h1>Panel de administración</h1>
+      <p class="welcome">Bienvenido, <strong><span id="nombreUsuario"></span></strong></p>
       <p>Desde aquí puedes organizar clientes, horarios y administrar la tienda.</p>
-      <ul>
-        <li><a href="clientes.html">Gestionar clientes</a></li>
-        <li><a href="proveedores.html">Gestionar proveedores</a></li>
-        <li><a href="productos-admin.html">Gestionar productos</a></li>
-        <li><a href="horarios.html">Gestionar horarios</a></li>
-        <li><a href="administrar.html">Ajustes administrativos</a></li>
-      </ul>
-    </section>
+      <p id="dashboardRoleInfo" class="role-banner"></p>
+
+      <div class="admin-links">
+        <ul id="dashboardLinks">
+          <li><a href="clientes.html" data-admin-only>Gestionar clientes</a></li>
+          <li><a href="proveedores.html" data-admin-only>Gestionar proveedores</a></li>
+          <li><a href="productos-admin.html" data-admin-only>Gestionar productos</a></li>
+          <li><a href="horarios.html">Calendario</a></li>
+          <li><a href="administrar.html" data-admin-only>Ajustes administrativos</a></li>
+        </ul>
+      </div>
+    </div>
   </main>
 
   <footer>
@@ -59,10 +63,28 @@
 
   <script src="../../Pagina-JS/storage.js"></script>
   <script src="../../Pagina-JS/Auth.js"></script>
+  <script src="../../Pagina-JS/site-header.js"></script>
+  <script src="../../Pagina-JS/accordion.js"></script>
   <script>
-    verificarSesion();
-    mostrarInfoUsuario();
-    document.getElementById('logout').addEventListener('click', function(e){
+    const sesion = verificarSesion(['admin', 'empleado']);
+    if (sesion) {
+      mostrarInfoUsuario();
+      const dashboardRoleInfo = document.getElementById('dashboardRoleInfo');
+      const adminOnly = document.querySelectorAll('[data-admin-only]');
+      if (sesion.rol === 'admin') {
+        dashboardRoleInfo.textContent = 'Vista de administración completa: clientes, productos, proveedores, horarios y ajustes.';
+      } else {
+        dashboardRoleInfo.textContent = 'Vista operativa de empleado: calendario, nómina, vacaciones y seguimiento interno.';
+        adminOnly.forEach(el => {
+          if (el.closest('li')) {
+            el.closest('li').style.display = 'none';
+          } else {
+            el.style.display = 'none';
+          }
+        });
+      }
+    }
+    document.getElementById('logout').addEventListener('click', function(e) {
       e.preventDefault();
       cerrarSesion();
     });

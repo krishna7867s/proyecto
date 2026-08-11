@@ -199,7 +199,7 @@ function generarProductos(cantidad) {
 // 4. Función principal
 // ---------------------------------------------------------
 
-function ejecutarGenerador() {
+async function ejecutarGenerador() {
   // Verificar que storage.js está cargado (para poder guardar clientes)
   if (typeof addItem !== "function" || typeof getData !== "function") {
     console.error(
@@ -216,11 +216,25 @@ function ejecutarGenerador() {
   const totalActual = clientesActuales + proveedoresActuales + productosActuales;
 
   if (totalActual >= 200) {
-    const continuar = confirm(
-      `Ya tienes ${totalActual} registros combinados ` +
+    const message = `Ya tienes ${totalActual} registros combinados ` +
       `(${clientesActuales} clientes, ${proveedoresActuales} proveedores, ${productosActuales} productos). ` +
-      `¿Quieres generar 200 registros MÁS de todas formas? (Cancelar = no hacer nada)`
-    );
+      `¿Quieres generar 200 registros MÁS de todas formas?`;
+    let continuar = false;
+    if (typeof showConfirm === 'function') continuar = await showConfirm(message);
+    else if (typeof modalConfirm === 'function') continuar = await modalConfirm(message);
+    else {
+      continuar = await new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.style = 'position:fixed;inset:0;background:rgba(2,6,23,0.6);display:flex;align-items:center;justify-content:center;z-index:99999;';
+        const box = document.createElement('div'); box.style='max-width:520px;padding:18px;border-radius:12px;background:#071226;color:#fff;border:1px solid rgba(255,255,255,0.04);';
+        const m = document.createElement('div'); m.style.marginBottom='12px'; m.textContent = message;
+        const btns = document.createElement('div'); btns.style.display='flex'; btns.style.justifyContent='flex-end'; btns.style.gap='8px';
+        const btnCancel = document.createElement('button'); btnCancel.textContent='Cancelar'; const btnOk = document.createElement('button'); btnOk.textContent='Aceptar'; btnOk.style.background='#00b4ff'; btnOk.style.border='none'; btnOk.style.color='#021020';
+        btns.appendChild(btnCancel); btns.appendChild(btnOk); box.appendChild(m); box.appendChild(btns); overlay.appendChild(box); document.body.appendChild(overlay);
+        btnOk.addEventListener('click', () => { document.body.removeChild(overlay); resolve(true); });
+        btnCancel.addEventListener('click', () => { document.body.removeChild(overlay); resolve(false); });
+      });
+    }
     if (!continuar) {
       console.log("Generación cancelada por el usuario.");
       return;
