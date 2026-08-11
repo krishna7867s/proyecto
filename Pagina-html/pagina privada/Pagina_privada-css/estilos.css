@@ -512,6 +512,41 @@ tr:hover {
   font-weight: 600;
 }
 
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0 22px;
+}
+
+.stat-card {
+  padding: 18px 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+  border-color: rgba(0, 199, 253, 0.12);
+}
+
+.stat-card span {
+  display: block;
+  color: var(--admin-text-muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--admin-accent);
+}
+
+.stat-card small {
+  display: block;
+  margin-top: 10px;
+  color: var(--admin-text-muted);
+}
+
 #employeeViewWrap select {
   margin-top: 8px;
   background: rgba(12, 20, 36, 0.7);
@@ -1011,6 +1046,9 @@ tr:hover {
   .insights-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .dashboard-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 860px) {
@@ -1018,6 +1056,9 @@ tr:hover {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .insights-grid {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-stats {
     grid-template-columns: 1fr;
   }
 }

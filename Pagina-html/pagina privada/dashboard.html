@@ -28,6 +28,29 @@
       <p>Desde aquí puedes organizar clientes, horarios y administrar la tienda.</p>
       <p id="dashboardRoleInfo" class="role-banner"></p>
 
+      <div class="dashboard-stats">
+        <article class="panel-card stat-card">
+          <span>Clientes</span>
+          <strong id="statClients">0</strong>
+          <small>Registrados en el sistema</small>
+        </article>
+        <article class="panel-card stat-card">
+          <span>Proveedores</span>
+          <strong id="statProviders">0</strong>
+          <small>Activos en la cadena</small>
+        </article>
+        <article class="panel-card stat-card">
+          <span>Productos</span>
+          <strong id="statProducts">0</strong>
+          <small>En catálogo</small>
+        </article>
+        <article class="panel-card stat-card">
+          <span>Solicitudes</span>
+          <strong id="statRequests">0</strong>
+          <small>Pendientes de revisión</small>
+        </article>
+      </div>
+
       <div class="admin-links">
         <ul id="dashboardLinks">
           <li><a href="clientes.html" data-admin-only>Gestionar clientes</a></li>
@@ -70,7 +93,21 @@
     if (sesion) {
       mostrarInfoUsuario();
       const dashboardRoleInfo = document.getElementById('dashboardRoleInfo');
+      const statClients = document.getElementById('statClients');
+      const statProviders = document.getElementById('statProviders');
+      const statProducts = document.getElementById('statProducts');
+      const statRequests = document.getElementById('statRequests');
       const adminOnly = document.querySelectorAll('[data-admin-only]');
+      const clientCount = getData('clientes').length;
+      const providerCount = JSON.parse(localStorage.getItem('dali_providers') || '[]').length;
+      const productCount = JSON.parse(localStorage.getItem('dali_products') || '[]').length;
+      const vacationCount = JSON.parse(localStorage.getItem('dali_vacation_requests') || '[]').filter(item => item.status === 'Pendiente').length;
+
+      if (statClients) statClients.textContent = clientCount;
+      if (statProviders) statProviders.textContent = providerCount;
+      if (statProducts) statProducts.textContent = productCount;
+      if (statRequests) statRequests.textContent = vacationCount;
+
       if (sesion.rol === 'admin') {
         dashboardRoleInfo.textContent = 'Vista de administración completa: clientes, productos, proveedores, horarios y ajustes.';
       } else {
