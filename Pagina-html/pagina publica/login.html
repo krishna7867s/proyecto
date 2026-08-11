@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="Pagina-css/estilos.css">
 </head>
 <body>
-  
   <header>
     <a href="index.html" class="logo">dali medica</a>
     <nav>
@@ -22,21 +21,25 @@
   </header>
 
   <main>
-    <div class="page">
+    <div class="page auth-card">
       <h1>Iniciar sesión</h1>
-      
-      <form id="loginForm">
-        <label>Usuario o correo electrónico</label>
-        <input id="usuario" type="text" required style="background-color: rgba(3, 7, 18, 0.8); color: #ffffff; border: 1px solid rgba(255,255,255,0.15); width:100%; padding:0.8rem; border-radius:10px; box-sizing:border-box;">
-        
-        <label>Contraseña</label>
-        <input id="password" type="password" required style="background-color: rgba(3, 7, 18, 0.8); color: #ffffff; border: 1px solid rgba(255,255,255,0.15); width:100%; padding:0.8rem; border-radius:10px; box-sizing:border-box;">
-        
-        <button type="submit" id="btnLogin" style="width:100%; padding:0.8rem; background:#0068b5; color:#fff; border:none; border-radius:10px; font-weight:bold; cursor:pointer; margin-top:10px;">Entrar</button>
+      <p style="text-align:center; color: var(--text-muted); margin-bottom: 1rem;">Acceso para cliente, empleado y administrador.</p>
+
+      <form id="formLogin">
+        <label for="usuario">Usuario o correo electrónico</label>
+        <input id="usuario" type="text" autocomplete="username" required>
+
+        <label for="password">Contraseña</label>
+        <div class="password-field">
+          <input id="password" type="password" autocomplete="current-password" required>
+          <button type="button" id="toggleLoginPassword" class="password-toggle" aria-label="Mostrar contraseña">Mostrar</button>
+        </div>
+
+        <button type="submit" id="btnLogin">Entrar</button>
       </form>
-      
+
       <p id="msg" class="error" style="display:none; text-align:center; margin-top:10px;"></p>
-      
+
       <p class="link" style="text-align:center; margin-top:15px;">
         <a href="crear_usuario.html">¿No tienes cuenta? Créala aquí</a>
       </p>
@@ -46,114 +49,47 @@
   <footer>
     <div class="footer-content">
       <div class="footer-block">
-        <h3>dali medica</h3>
-        <p>Suministro integral de productos médicos en Costa Rica.</p>
+        <h3>Suscríbete a noticias</h3>
+        <p>Recibe novedades, promociones y actualizaciones de Dali Medica.</p>
+        <form>
+          <label for="newsletter-email-login">Correo electrónico</label>
+          <input id="newsletter-email-login" type="email" placeholder="Tu correo" required>
+          <button type="submit">Registrarme</button>
+        </form>
       </div>
-      <div class="footer-block">
-        <h4>Enlaces rápidos</h4>
-        <ul>
-          <li><a href="index.html">Inicio</a></li>
-          <li><a href="productos.html">Productos</a></li>
-          <li><a href="nosotros.html">Nosotros</a></li>
-          <li><a href="contactos.html">Contactos</a></li>
+      <div class="footer-block footer-providers">
+        <h3>Proveedores aliados</h3>
+        <p>Conoce a las marcas que respaldan nuestras soluciones médicas.</p>
+        <ul class="provider-links">
+          <li><a href="https://www.medtronic.com" target="_blank" rel="noopener noreferrer">Medtronic <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.jnjmedtech.com" target="_blank" rel="noopener noreferrer">Johnson &amp; Johnson MedTech <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.siemens-healthineers.com" target="_blank" rel="noopener noreferrer">Siemens Healthineers <span aria-hidden="true">↗</span></a></li>
+          <li><a href="https://www.gehealthcare.com" target="_blank" rel="noopener noreferrer">GE HealthCare <span aria-hidden="true">↗</span></a></li>
         </ul>
       </div>
       <div class="footer-block">
-        <h4>Contacto</h4>
-        <p>📞 +506 2222-3333</p>
-        <p>📱 +506 8888-9999</p>
-        <p>✉️ contacto@dalimedica.com</p>
+        <h3>Contáctanos</h3>
+        <p><strong>Teléfonos:</strong> +506 2222-3333 / +506 8888-9999</p>
+        <p><strong>Correo:</strong> contacto@dalimedica.com</p>
+        <p>Centro Médico Dali Medica · San José, Costa Rica</p>
       </div>
     </div>
-    <div class="footer-copy">
-      <p>&copy; 2026 Dali Medica</p>
-    </div>
+    <p class="footer-copy">&copy; 2026 Dali Medica — Página pública</p>
   </footer>
+  <script src="../../Pagina-JS/storage.js"></script>
+  <script src="../../Pagina-JS/Auth.js"></script>
   <script src="../../Pagina-JS/site-header.js"></script>
-  <!-- SOLUCIÓN DE EMERGENCIA: El código de login está aquí abajo -->
   <script>
-    const USUARIOS_KEY = 'usuariosDaliMedica';
-    const SESION_KEY = 'usuariosDaliMedicaSesion';
-
-    function cargarUsuarios() {
-      return JSON.parse(localStorage.getItem(USUARIOS_KEY)) || [];
+    const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+    const loginPassword = document.getElementById('password');
+    if (toggleLoginPassword && loginPassword) {
+      toggleLoginPassword.addEventListener('click', function() {
+        const isPassword = loginPassword.type === 'password';
+        loginPassword.type = isPassword ? 'text' : 'password';
+        toggleLoginPassword.textContent = isPassword ? 'Ocultar' : 'Mostrar';
+        toggleLoginPassword.setAttribute('aria-label', isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña');
+      });
     }
-
-    function guardarUsuarios(usuarios) {
-      localStorage.setItem(USUARIOS_KEY, JSON.stringify(usuarios));
-    }
-
-    function inicializarAdmin() {
-      const usuarios = cargarUsuarios();
-      const existeAdmin = usuarios.some(u => u.usuario === 'admin' || u.email === 'admin@dalimedica.cr');
-      if (!existeAdmin) {
-        usuarios.unshift({
-          usuario: 'admin',
-          email: 'admin@dalimedica.cr',
-          password: 'admin123',
-          nombre: 'Administrador',
-          rol: 'admin'
-        });
-        guardarUsuarios(usuarios);
-      }
-      return usuarios;
-    }
-
-    function guardarSesion(usuario) {
-      localStorage.setItem(SESION_KEY, JSON.stringify({
-        usuario: usuario.usuario,
-        nombre: usuario.nombre || usuario.usuario,
-        rol: usuario.rol || 'cliente',
-        email: usuario.email || '',
-        inicio: new Date().toISOString()
-      }));
-    }
-
-    function mostrarMensaje(texto, tipo) {
-      const msg = document.getElementById('msg');
-      msg.style.display = 'block';
-      msg.style.color = tipo === 'error' ? '#ef4444' : '#00c7fd';
-      msg.textContent = texto;
-    }
-
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      const usuario = document.getElementById('usuario').value.trim();
-      const password = document.getElementById('password').value.trim();
-
-      if (!usuario || !password) {
-        mostrarMensaje('Por favor, completa todos los campos.', 'error');
-        return;
-      }
-
-      const usuariosRegistrados = inicializarAdmin();
-      const usuarioEncontrado = usuariosRegistrados.find(u =>
-        (u.usuario === usuario || u.email === usuario) && u.password === password
-      );
-
-      if (!usuarioEncontrado) {
-        mostrarMensaje('Usuario o contraseña incorrectos. Verifica tus datos e inténtalo de nuevo.', 'error');
-        return;
-      }
-
-      if (!usuarioEncontrado.rol) {
-        usuarioEncontrado.rol = usuarioEncontrado.usuario === 'admin' ? 'admin' : 'cliente';
-        guardarUsuarios(usuariosRegistrados);
-      }
-
-      guardarSesion(usuarioEncontrado);
-      mostrarMensaje('¡Bienvenido ' + (usuarioEncontrado.nombre || usuarioEncontrado.usuario) + '! Redirigiendo...', 'success');
-
-      setTimeout(() => {
-        if (usuarioEncontrado.rol === 'admin') {
-          window.location.href = '../pagina privada/dashboard.html';
-        } else {
-          window.location.href = 'productos.html';
-        }
-      }, 1200);
-    });
   </script>
-
 </body>
 </html>

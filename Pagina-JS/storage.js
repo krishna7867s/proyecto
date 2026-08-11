@@ -91,3 +91,41 @@ function getItemById(key, id) {
     const data = getData(key);
     return data.find(item => item.id === id || item.id === String(id)) || null;
 }
+
+/**
+ * Parsea un archivo CSV simple y devuelve objetos según columnas esperadas.
+ * @param {File} file
+ * @param {string[]} columns
+ * @returns {Promise<Array<Object>>}
+ */
+function parseCsvFile(file, columns) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const text = event.target.result || '';
+            const lines = text.trim().split(/\r?\n/).filter(Boolean);
+            if (!lines.length) {
+                reject(new Error('El archivo CSV está vacío.'));
+                return;
+            }
+
+            const headerLine = lines[0].trim().toLowerCase();
+            const hasHeader = columns.some(col => headerLine.includes(col.toLowerCase()));
+            const startIndex = hasHeader ? 1 : 0;
+            const rows = [];
+
+            for (let i = startIndex; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim());
+                const row = {};
+                columns.forEach((col, idx) => {
+                    row[col] = values[idx] || '';
+                });
+                rows.push(row);
+            }
+
+            resolve(rows);
+        };
+        reader.onerror = () => reject(new Error('No se pudo leer el archivo CSV.'));
+        reader.readAsText(file, 'UTF-8');
+    });
+}
