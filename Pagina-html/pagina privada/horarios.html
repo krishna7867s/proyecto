@@ -213,8 +213,8 @@
 
     if (roleBanner) {
       roleBanner.textContent = isAdmin
-        ? 'Vista de administrador: puedes registrar eventos y aprobar solicitudes.'
-        : 'Vista de empleado: puedes ver tu nómina, pedir vacaciones y revisar tu calendario.';
+        ? 'Vista de administrador: calendario completo, nómina gerencial y solicitudes pendientes.'
+        : 'Vista de empleado: tu calendario, tu nómina y tus solicitudes de vacaciones.';
     }
 
     if (scheduleForm) {
@@ -240,6 +240,9 @@
       });
       employeeViewSelect.value = options.includes(current) ? current : (options[0] || 'Sin selección');
       selectedAdminEmployee = employeeViewSelect.value;
+      if (selectedAdminEmployee === 'Sin selección' && options[0]) {
+        selectedAdminEmployee = options[0];
+      }
     }
 
     function saveSchedules() {

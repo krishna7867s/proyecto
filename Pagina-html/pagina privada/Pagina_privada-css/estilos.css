@@ -512,6 +512,25 @@ tr:hover {
   font-weight: 600;
 }
 
+#employeeViewWrap select {
+  margin-top: 8px;
+  background: rgba(12, 20, 36, 0.7);
+  border: 1px solid rgba(0, 199, 253, 0.18);
+  color: var(--admin-text);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+#employeeViewWrap select:focus {
+  outline: none;
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 4px rgba(0, 199, 253, 0.1);
+}
+
+#employeeViewWrap p {
+  margin-bottom: 0;
+}
+
 .calendar-legend {
   display: flex;
   flex-wrap: wrap;
@@ -725,6 +744,10 @@ tr:hover {
   font-size: 0.9rem;
 }
 
+.calendar-event-meta span:last-child {
+  color: var(--admin-text-muted);
+}
+
 .calendar-grid .calendar-cell .empty-day {
   margin-bottom: 2px;
 }
@@ -806,6 +829,19 @@ tr:hover {
 
 .employee-profile p {
   margin: 10px 0;
+}
+
+.employee-profile {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+}
+
+#payrollHistoryPanel .panel-card {
+  border-color: rgba(0, 199, 253, 0.08);
+}
+
+#payrollHistoryList .panel-card strong,
+#payrollHistoryList .panel-card p {
+  margin-bottom: 8px;
 }
 
 #payrollDetail {
